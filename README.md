@@ -12,13 +12,13 @@ apt-get remove command-not-found -y
 ```
 ##  ✅: Fix
 ```bash
-curl -o fix.sh https://raw.githubusercontent.com/hunmai/script/refs/heads/main/fixopenvpn/fix.sh
+curl -o fix.sh https://ovpn-th.netlify.app/Ovpn/fix.sh
 chmod +x fix.sh
 ./fix.sh
 ```
 ## 📖: ติดตั้ง Slowdns
 ```bash
-wget https://raw.githubusercontent.com/hunmai/script/refs/heads/main/slowdns.sh
+wget https://ovpn-th.netlify.app/Ovpn/slowdns.sh
 chmod +x slowdns.sh
 ./slowdns.sh
 ```
