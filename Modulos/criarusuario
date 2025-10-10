@@ -9,18 +9,6 @@ scor='\033[0m'
 # Gerar client.ovpn
 newclient() {
     cp /etc/openvpn/client-common.txt ~/$1.ovpn
-    echo "<ca>" >>~/$1.ovpn
-    cat /etc/openvpn/easy-rsa/pki/ca.crt >>~/$1.ovpn
-    echo "</ca>" >>~/$1.ovpn
-    echo "<cert>" >>~/$1.ovpn
-    cat /etc/openvpn/easy-rsa/pki/issued/$1.crt >>~/$1.ovpn
-    echo "</cert>" >>~/$1.ovpn
-    echo "<key>" >>~/$1.ovpn
-    cat /etc/openvpn/easy-rsa/pki/private/$1.key >>~/$1.ovpn
-    echo "</key>" >>~/$1.ovpn
-    echo "<tls-auth>" >>~/$1.ovpn
-    cat /etc/openvpn/ta.key >>~/$1.ovpn
-    echo "</tls-auth>" >>~/$1.ovpn
 }
 fun_geraovpn() {
     [[ "$respost" = @(s|S) ]] && {
@@ -499,9 +487,9 @@ else
             [[ -d /var/www/html/openvpn ]] && {
                 mv $HOME/$username.zip /var/www/html/openvpn/$username.zip >/dev/null 2>&1
                 [[ "$VERSION_ID" = 'VERSION_ID="14.04"' ]] && {
-                    echo -e "\033[1;32mลิงค์\033[1;37m: \033[1;36m$IP:81/html/openvpn/$username.zip"
+                    echo -e "\033[1;32mลิงค์\033[1;37m: \033[1;36m$IP:8888/html/openvpn/$username.zip"
                 } || {
-                    echo -e "\033[1;32mลิงค์\033[1;37m: \033[1;36m$IP:81/openvpn/$username.zip"
+                    echo -e "\033[1;32mลิงค์\033[1;37m: \033[1;36m$IP:8888/openvpn/$username.zip"
                 }
             } || {
                 echo -e "\033[1;32mมีอยู่ em\033[1;31m" ~/"$username.zip\033[0m"
