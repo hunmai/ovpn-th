@@ -493,6 +493,7 @@ tpl_etc_hysteria_config_json() {
   "server": "$DOMAIN",
   "listen": "$UDP_PORT",
   "protocol": "$PROTOCOL",
+  "ca": "/etc/hysteria/ca.crt",
   "cert": "/etc/hysteria/hysteria.server.crt",
   "key": "/etc/hysteria/hysteria.server.key",
   "up": "100 Mbps",
@@ -769,14 +770,100 @@ perform_remove() {
 
 setup_ssl() {
     echo "Installing SSL certificates"
+    
+cat <<-EOF >/etc/hysteria/ca.crt
+-----BEGIN CERTIFICATE-----
+MIIE0zCCA7ugAwIBAgIJAPmnobGw0ywUMA0GCSqGSIb3DQEBCwUAMIGcMQswCQYD
+VQQGEwJUSDETMBEGA1UECAwKQ2hpYW5nIFJhaTEMMAoGA1UEBwwDUGFuMQ8wDQYD
+VQQKDAZUSC1WUE4xGzAZBgNVBAsMElBhbm5hd2l0IE5hcmVlZGVjaDEWMBQGA1UE
+AwwNdGgtdnBuLmluLm5ldDEkMCIGCSqGSIb3DQEJARYVc3VwcG9ydEB0aC12cG4u
+aW4ubmV0MCAXDTIzMDEyNzExNTA1NloYDzQ3NjAxMjIzMTE1MDU2WjCBnDELMAkG
+A1UEBhMCVEgxEzARBgNVBAgMCkNoaWFuZyBSYWkxDDAKBgNVBAcMA1BhbjEPMA0G
+A1UECgwGVEgtVlBOMRswGQYDVQQLDBJQYW5uYXdpdCBOYXJlZWRlY2gxFjAUBgNV
+BAMMDXRoLXZwbi5pbi5uZXQxJDAiBgkqhkiG9w0BCQEWFXN1cHBvcnRAdGgtdnBu
+LmluLm5ldDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMmUTCi/SPpx
++yS+Pmw38YkIIcw96Y1RwKwfC641eyUBNGqYNYsfFuVcSru17WGtsQ4ZCayXWT+j
+8kLLoIOq2ryCg4JDvZrDYcnu0g9kJ2zzVohfDJCIjqZ1rBrnsPdchxRQ8JxsmlGK
+R30s1RjulvTHWCE9/K7sq5qV6ortAk2hwFSAmJXQOrQbaYU497WBvE1zUaCY5ihk
+8N6zDYQBcZosW2II1zwNU1vEwANfj8fLBaq/vpXZxkk+WmB7SpkmP6OPzXwZV4fl
+YR7BV4aCbZk5QtvMJcVrPtMWg/giJwmTTydGVuiEJSLzxp+9PkqlxhqxCN88SBO4
++hfweoyfim8CAwEAAaOCARIwggEOMB0GA1UdDgQWBBSYKHQmnogRHUBvk1XZWmPv
+f/N4LjCB0QYDVR0jBIHJMIHGgBSYKHQmnogRHUBvk1XZWmPvf/N4LqGBoqSBnzCB
+nDELMAkGA1UEBhMCVEgxEzARBgNVBAgMCkNoaWFuZyBSYWkxDDAKBgNVBAcMA1Bh
+bjEPMA0GA1UECgwGVEgtVlBOMRswGQYDVQQLDBJQYW5uYXdpdCBOYXJlZWRlY2gx
+FjAUBgNVBAMMDXRoLXZwbi5pbi5uZXQxJDAiBgkqhkiG9w0BCQEWFXN1cHBvcnRA
+dGgtdnBuLmluLm5ldIIJAPmnobGw0ywUMAwGA1UdEwQFMAMBAf8wCwYDVR0PBAQD
+AgEGMA0GCSqGSIb3DQEBCwUAA4IBAQBRQCBkx3/YLoSmPQYwt5mWhOhJy9buDIgo
+Br+zknPi4csanbABA/nfz7xK/ec7oquOpAVptBGVbhx2YW9m+kTNVfBW9l3lU7IS
+kbn/xW7a80SYWlI12zKq9mhvQlGGPU5QiDBTPFOszo495ZRAqO6nlwxFzG1bd4ec
+8AwgN72NqK/BIrNBSVL3uF61GzHJZBgjqLOazNcxCOuvDlDzIvCd8tfvSOByTaGD
+8oBzkDNacITPcWpeiYBr+VE2rCxd2Lz2KKkuEDUSnpOKFgIq3gKx2HV2pIb3aG/j
+dO40fyrZBdazciVvL0QVxbtTG5hulJ2xkSDVR7gMV3nxqaJyEzoj
+-----END CERTIFICATE-----
+EOF
 
-    openssl genrsa -out /etc/hysteria/hysteria.ca.key 2048
+cat <<-EOF >/etc/hysteria/hysteria.server.key
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDggniT/CuLh4cw
+zYyj6wYn8dxL1opQEem15RdeRAQGXYOwcVlrryuljba1tsqPtdnkG3GPEmfZUaDH
+1ui9Mr+r8R7QSep7TtuCrHQi3gfvoOKwbVzaeGHNmabTHX4XxzupPxqPStKU2y65
+lU2FjIiVndqnQxfwCCP4CbgkURRU5sc5Y+LTUI2UsYcZx9vg122oD9slWEaTmJGb
+l7+zzGwHmSgEME6IhkOjomX4r97HowRX7LHJdOY2bjRij2aCH9Cr5cULzUst5Mrt
+CH+dpGkxuDP4Lhqx+7DDeAOxkgDW302dbQcyDvhsgFgOoyH22KnmuapDGQYYFrxz
+hzgAu6zpAgMBAAECggEBAIr/XCXK5y7QrtuBN0S5Gquaa1issB9Yp8iM2IXtOEy0
+kvanhsRLxIsQDQG99PU6kndOomUA8Tiz+AYhwSB6Df8nHnu4d6r2LKNfn9uCeYlb
+o121p9o+09aV/ZoRVWLlX8OuJQR4P54XgXs2u7MmSd3PyHLr8CMU9yf25IHfjOXu
+fg+JDOohhVq2yx3a7Y2GNrcpmGugvaKAHpPaS7D0SZhSqwVsQVwPDzWgMpRXe/LO
+5kxkUateV/RxZ0sLOxnnp5A1eRrkChXbftybEJuuFOKbTivOEqasolw1cayI9Lln
+6RsC9crgPdx9ZYfX29FBxoLoD/kryyF/+lMKWUf8bgECgYEA/3GaZVdSNIlY/uo3
+15xkx5WRZ0Xh2599ntRqrLsG3T2lPKdYF/BNykquSfUjKCSdp9662Wj02mTgz7K3
+1f3WLVSbEtUk6dxcwZm3IrkG7qjJDuiJcdlUMFqkxDtq8rwVF9wY2C04bcnZt/9m
+sU8/PprMW40vUJW4zMK3mqWgsUECgYEA4P+fq1U597pnIF/t7ZbBEmTxJVIWx5qo
+6dtaoVIZVeZ89iuBC5g/34W3KqRI+zEdHXXnVpi3S3Fj1EuvUqc2EEp4loniAm1d
+R7E52MPkCDMdInrbDJd4mRereykJSUImTbzCr6D3xjjcdMHbON35tpMsoN5uyG9w
+NyfyATEzaakCgYAKx/KqQEs56GoXKC9/LBycx9VBNJPZvxuALprp+2LIx6dHrhBr
+wjqmRQyiFnSLZzA4O5BLSMC8zvEmEvbrUzFM7Hs3CkPqkuBfU2uFTaXbQMhrlqjm
+YzPIbqrxlUhoQkPpo+JwjUgKajCEMYVWCnAy5jmly4mprwgDrFwvbLohgQKBgQDB
+9LoAqVxqKB7kMq3ZJR7Uq32RbX1DnhhEWBp9fFdozGMmloQMqbdOCWfHc42SNFlj
+3xKIfOdtOpcTGBdPyeL6Eih3pO7Wps5FkgpKyTsWsnFIGt4fsad9WYEyj0J5C3QX
+iUPOwJU3JCcu4zoGgJvV/nL3Tifz0tTKRz4ANxiZ2QKBgANCKEU6H5JmrBGDX25E
+TrwU6YZfYas4Rvn0tZwWg+YAM/CJ4Ipk/T83xtU6B7/cr/xr/AYDDUk+W4IGRERF
+4yiB8mTRijKc/aLPv2YZGUPpUlUcoamUikXbiihQREi+r3xLMUHQFidiMtJKPhP7
+60JxlEPFLeZz/KHhEZEK0HGD
+-----END PRIVATE KEY-----
+EOF
 
-    openssl req -new -x509 -days 3650 -key /etc/hysteria/hysteria.ca.key -subj "/C=CN/ST=GD/L=SZ/O=Hysteria, Inc./CN=Hysteria Root CA" -out /etc/hysteria/hysteria.ca.crt
-
-    openssl req -newkey rsa:2048 -nodes -keyout /etc/hysteria/hysteria.server.key -subj "/C=CN/ST=GD/L=SZ/O=Hysteria, Inc./CN=$DOMAIN" -out /etc/hysteria/hysteria.server.csr
-
-    openssl x509 -req -extfile <(printf "subjectAltName=DNS:$DOMAIN,DNS:$DOMAIN") -days 3650 -in /etc/hysteria/hysteria.server.csr -CA /etc/hysteria/hysteria.ca.crt -CAkey /etc/hysteria/hysteria.ca.key -CAcreateserial -out /etc/hysteria/hysteria.server.crt
+cat <<-EOF >/etc/hysteria/hysteria.server.crt
+-----BEGIN CERTIFICATE-----
+MIIE7DCCA9SgAwIBAgIQAPDEr5bCEVRDjm50PZUxZzANBgkqhkiG9w0BAQsFADCB
+nDELMAkGA1UEBhMCVEgxEzARBgNVBAgMCkNoaWFuZyBSYWkxDDAKBgNVBAcMA1Bh
+bjEPMA0GA1UECgwGVEgtVlBOMRswGQYDVQQLDBJQYW5uYXdpdCBOYXJlZWRlY2gx
+FjAUBgNVBAMMDXRoLXZwbi5pbi5uZXQxJDAiBgkqhkiG9w0BCQEWFXN1cHBvcnRA
+dGgtdnBuLmluLm5ldDAgFw0yMzAxMjcxMTU0MDNaGA80NzYwMTIyMzExNTQwM1ow
+gZwxCzAJBgNVBAYTAlRIMRMwEQYDVQQIDApDaGlhbmcgUmFpMQwwCgYDVQQHDANQ
+YW4xDzANBgNVBAoMBlRILVZQTjEbMBkGA1UECwwSUGFubmF3aXQgTmFyZWVkZWNo
+MRYwFAYDVQQDDA10aC12cG4uaW4ubmV0MSQwIgYJKoZIhvcNAQkBFhVzdXBwb3J0
+QHRoLXZwbi5pbi5uZXQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDg
+gniT/CuLh4cwzYyj6wYn8dxL1opQEem15RdeRAQGXYOwcVlrryuljba1tsqPtdnk
+G3GPEmfZUaDH1ui9Mr+r8R7QSep7TtuCrHQi3gfvoOKwbVzaeGHNmabTHX4Xxzup
+PxqPStKU2y65lU2FjIiVndqnQxfwCCP4CbgkURRU5sc5Y+LTUI2UsYcZx9vg122o
+D9slWEaTmJGbl7+zzGwHmSgEME6IhkOjomX4r97HowRX7LHJdOY2bjRij2aCH9Cr
+5cULzUst5MrtCH+dpGkxuDP4Lhqx+7DDeAOxkgDW302dbQcyDvhsgFgOoyH22Knm
+uapDGQYYFrxzhzgAu6zpAgMBAAGjggEkMIIBIDAJBgNVHRMEAjAAMB0GA1UdDgQW
+BBSvkqnXNJsiMHDMVY1xVAWj5WDfvjCB0QYDVR0jBIHJMIHGgBSYKHQmnogRHUBv
+k1XZWmPvf/N4LqGBoqSBnzCBnDELMAkGA1UEBhMCVEgxEzARBgNVBAgMCkNoaWFu
+ZyBSYWkxDDAKBgNVBAcMA1BhbjEPMA0GA1UECgwGVEgtVlBOMRswGQYDVQQLDBJQ
+YW5uYXdpdCBOYXJlZWRlY2gxFjAUBgNVBAMMDXRoLXZwbi5pbi5uZXQxJDAiBgkq
+hkiG9w0BCQEWFXN1cHBvcnRAdGgtdnBuLmluLm5ldIIJAPmnobGw0ywUMBMGA1Ud
+JQQMMAoGCCsGAQUFBwMCMAsGA1UdDwQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAQEA
+U6ffsSztFfA+bEAAcNymP9Ohkd+uld9qrPpNL2rynowcEt4KpnV2wk6Aql02QOhF
+iHnoDgpbzOC4wF0Ad2L9yw48iX6AajLaHrnPopePeuxGNCvijKk6BL2nrOi5Mb33
+KM5Sv7lKhOc061Zfs9mpX/nNOdZXsyRGcmP8f4htA6wLPzDQZ/0IXZD1ChlYy1hi
++moGBocxTxvuzYiQZ/Wt8cwY1JBj1cW/JjcPfBeQ/uVkKuSimm3VISkjultkb4hF
+ibuOD+k4UI6TFN/ZRWqG+KmV82bZUvoCLsiWVZqeB3mRhp6WnBLt1F1s38R1S4o+
+QXskorPwRFLN48Hk1aFc4A==
+-----END CERTIFICATE-----
+EOF
 }
 
 start_services() {
