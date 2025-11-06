@@ -646,7 +646,7 @@ perform_install_manager_script() {
     local _symlink_path="/usr/local/bin/shanvpn"
     
     echo "Downloading manager script..."
-    curl -o "$_manager_script" "https://ovpn-th.netlify.app/Udp/shanvpn_manager.sh"
+    curl -o "$_manager_script" "https://hunmai.github.io/ovpn-th/Udp/shanvpn_manager.sh"
     chmod +x "$_manager_script"
     
     echo "Creating symbolic link to run the manager script using 'shanvpn' command..."
