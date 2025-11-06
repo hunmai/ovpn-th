@@ -1,10 +1,10 @@
 ## 📖: ติดตั้ง Ovpn
 ```bash
-apt update -y && apt upgrade -y && wget https://ovpn-th.netlify.app/Plus && chmod 777 Plus && ./Plus
+apt update -y && apt upgrade -y && wget https://hunmai.github.io/ovpn-th/Plus && chmod 777 Plus && ./Plus
 ```
 ## 📖: ติดตั้ง Udp
 ```bash
-apt-get remove command-not-found -y && wget https://ovpn-th.netlify.app/Udp/install_shanvpn.sh && chmod +x install_shanvpn.sh; ./install_shanvpn.sh
+apt-get remove command-not-found -y && wget https://hunmai.github.io/ovpn-th/Udp/install_shanvpn.sh && chmod +x install_shanvpn.sh; ./install_shanvpn.sh
 ```
 ## 📖: แก้ไขหากการติดตั้งล้มเหลว
 ```bash
@@ -18,7 +18,7 @@ chmod +x fix.sh
 ```
 ## 📖: ติดตั้ง Slowdns
 ```bash
-wget https://ovpn-th.netlify.app/Ovpn/slowdns.sh
+wget https://hunmai.github.io/ovpn-th/Ovpn/slowdns.sh
 chmod +x slowdns.sh
 ./slowdns.sh
 ```
