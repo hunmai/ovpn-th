@@ -1,11 +1,6 @@
 cert = /etc/stunnel/cert.pem
 key = /etc/stunnel/key.pem
 client = no
-
-[openvpn]
-accept = 443
+[stunnel]
 connect = 127.0.0.1:1194
-
-[ssh]
-accept = 444
-connect = 127.0.0.1:22
+accept = 443
