@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นโยบายความเป็นส่วนตัว KHAM VPN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        :root {
+            --primary-color: #8B4513;  /* สีน้ำตาลเข้มจากโลโก้ */
+            --secondary-color: #A0522D; /* สีน้ำตาลกลาง */
+            --accent-color: #CD853F;    /* สีน้ำตาลอ่อน */
+            --light-color: #FAF0E6;     /* สีครีมอ่อน */
+            --text-color: #5D4037;      /* สีน้ำตาลเข้มสำหรับข้อความ */
+            --shadow: 0 10px 30px rgba(139, 69, 19, 0.1);
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #fefefe 0%, #f9f5f0 100%);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+            padding-top: 20px; /* เพิ่มพื้นที่ว่างด้านบน */
+        }
+        
+        /* นำทางแบบพิเศษ - โปร่งใสเพื่อให้เห็นโลโก้ชัด */
+        .custom-navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        
+        .custom-navbar.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            padding: 10px 18px !important;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(205, 133, 63, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(205, 133, 63, 0.3);
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            background-color: var(--primary-color);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+        
+        /* ส่วนเนื้อหา */
+        .content-section {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 35px;
+            padding: 35px;
+            transition: all 0.4s ease;
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .content-section:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .content-section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-section h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .content-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+        
+        .content-section:hover h3::after {
+            width: 120px;
+        }
+        
+        .content-section p {
+            color: var(--text-color);
+            margin-bottom: 18px;
+            font-size: 1.05rem;
+        }
+        
+        .content-section ul {
+            padding-left: 25px;
+        }
+        
+        .content-section li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 10px;
+        }
+        
+        .content-section li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+        
+        .content-section a {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 2px;
+        }
+        
+        .content-section a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .content-section a:hover {
+            color: var(--primary-color);
+        }
+        
+        .content-section a:hover::after {
+            width: 100%;
+        }
+        
+        /* ส่วนหัว */
+        .header-section {
+            background: linear-gradient(135deg, var(--light-color) 0%, #ffffff 100%);
+            border-radius: 25px;
+            padding: 60px 40px;
+            margin: 120px 0 60px; /* เพิ่ม margin-top จาก 100px เป็น 120px */
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(139, 69, 19, 0.1);
+        }
+        
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(205, 133, 63, 0.05) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .header-section h1 {
+            color: var(--primary-color);
+            font-weight: 800;
+            margin-bottom: 25px;
+            font-size: 2.8rem;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-section p {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+            position: relative;
+        }
+        
+        /* ส่วนท้าย */
+        .footer-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+');
+            opacity: 0.1;
+        }
+        
+        .footer-logo {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .footer-logo img {
+            height: 70px;
+            /* เปลี่ยนจาก filter: brightness(0) invert(1); เป็นปกติ */
+            transition: all 0.5s ease;
+        }
+        
+        .footer-logo:hover img {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        .footer-section p {
+            margin-bottom: 8px;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .footer-section .copyright {
+            margin-top: 30px;
+            opacity: 0.7;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        /* ปุ่มกลับขึ้นด้านบน */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 1000;
+            border: none;
+            outline: none;
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* เอฟเฟกต์พิเศษ */
+        .floating-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(205, 133, 63, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-icon:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+        
+        .floating-icon:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+        
+        .floating-icon:nth-child(3) {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 1s;
+        }
+        
+        .floating-icon:nth-child(4) {
+            bottom: 25%;
+            right: 5%;
+            animation-delay: 1.5s;
+        }
+        
+        /* Progress bar สำหรับอ่าน */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            z-index: 1001;
+            transition: width 0.2s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 25px 20px;
+            }
+            
+            .header-section {
+                padding: 40px 25px;
+                margin: 100px 0 50px; /* ปรับสำหรับหน้าจอขนาดเล็ก */
+            }
+            
+            .header-section h1 {
+                font-size: 2.2rem;
+            }
+            
+            .custom-navbar .navbar-nav {
+                text-align: center;
+                margin-top: 15px;
+            }
+            
+            /* แก้ไขโลโก้ให้ห่างจากขอบมือถือ */
+            .navbar-brand {
+                margin-left: 15px;
+            }
+            
+            .floating-icon {
+                display: none;
+            }
+        }
+        
+        /* สำหรับหน้าจอที่เล็กมาก (เช่น iPhone SE) */
+        @media (max-width: 375px) {
+            .navbar-brand {
+                margin-left: 10px;
+            }
+            
+            .navbar-brand img {
+                height: 35px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            
+            .header-section h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header-section p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar สำหรับติดตามการอ่าน -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- บาร์นำทางแบบพิเศษ - โปร่งใส -->
+    <nav class="navbar navbar-expand-lg custom-navbar" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://raw.githubusercontent.com/hunmai/icon/refs/heads/main/icon_kham.png" alt="KHAM VPN Logo">
+                KHAM VPN
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+                    <i class="fas fa-bars" style="color: var(--primary-color);"></i>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">หน้าแรก</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">นโยบายความเป็นส่วนตัว</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">บริการ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">ดาวน์โหลด</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">ติดต่อเรา</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- เพิ่ม margin-top ให้กับ container หลัก -->
+    <div class="container my-6">
+        <!-- ส่วนหัว -->
+        <div class="header-section">
+            <i class="fas fa-shield-alt floating-icon"></i>
+            <i class="fas fa-lock floating-icon"></i>
+            <i class="fas fa-user-shield floating-icon"></i>
+            <i class="fas fa-key floating-icon"></i>
+            
+            <h1>นโยบายความเป็นส่วนตัว</h1>
+            <p>สำหรับแอปพลิเคชัน KHAM VPN เป็นแอปที่รองรับโฆษณา ให้บริการโดย WarRingDa โดยไม่มีค่าใช้จ่ายและมีจุดประสงค์เพื่อการใช้งานตามที่เป็นอยู่ หน้านี้ใช้เพื่อแจ้งให้ผู้ใช้งานแอปของเราทราบเกี่ยวกับนโยบายของเราเกี่ยวกับการรวบรวม การใช้ และการเปิดเผยข้อมูลส่วนบุคคล หากใครก็ตามตัดสินใจใช้บริการของเรา แสดงว่าคุณยอมรับการรวบรวมและการใช้ข้อมูลที่เกี่ยวข้องกับนโยบายนี้</p>
+        </div>
+
+        <!-- ส่วนเนื้อหา -->
+        <div class="content-section">
+            <h3><i class="fas fa-database me-2"></i>การรวบรวมและการใช้ข้อมูล</h3>
+            <p>เพื่อประสบการณ์ที่ดีขึ้น ในขณะที่ใช้บริการของเรา เราอาจขอให้คุณให้ข้อมูลที่สามารถระบุตัวตนส่วนบุคคลบางอย่างแก่เรา ข้อมูลที่เราร้องขอจะถูกเก็บไว้ในอุปกรณ์ของคุณและเราจะไม่เก็บรวบรวมไม่ว่าในทางใดทางหนึ่ง แอปใช้บริการของบุคคลที่สามที่อาจรวบรวมข้อมูลที่ใช้ระบุตัวคุณ ลิงก์ไปยังนโยบายความเป็นส่วนตัวของผู้ให้บริการบุคคลที่สามที่แอปใช้</p>
+            <ul>
+                <li><a href="https://www.google.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Google Play Services</a></li> 
+                <li><a href="https://support.google.com/admob/answer/6128543?hl=en" target="_blank" rel="noopener noreferrer">AdMob</a></li> 
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-clipboard-list me-2"></i>บันทึกข้อมูล</h3>
+            <p>เราต้องการแจ้งให้คุณทราบว่าเมื่อใดก็ตามที่คุณใช้บริการของเรา ในกรณีที่เกิดข้อผิดพลาดในแอป เราจะรวบรวมข้อมูลและข้อมูล (ผ่านผลิตภัณฑ์ของบุคคลที่สาม) บนโทรศัพท์ของคุณที่เรียกว่า Log Data ข้อมูลบันทึกนี้อาจรวมถึงข้อมูลต่างๆ เช่น ที่อยู่ Internet Protocol ("IP") ของอุปกรณ์ ชื่ออุปกรณ์ เวอร์ชันระบบปฏิบัติการ การกำหนดค่าของแอปเมื่อใช้บริการของเรา เวลาและวันที่ที่คุณใช้บริการ และสถิติอื่นๆ</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-cookie-bite me-2"></i>คุ้กกี้</h3>
+            <p>คุกกี้คือไฟล์ที่มีข้อมูลจำนวนเล็กน้อยซึ่งมักใช้เป็นตัวระบุที่ไม่ระบุชื่อ สิ่งเหล่านี้จะถูกส่งไปยังเบราว์เซอร์ของคุณจากเว็บไซต์ที่คุณเยี่ยมชมและจัดเก็บไว้ในหน่วยความจำภายในของอุปกรณ์ของคุณ บริการนี้ไม่ได้ใช้ "คุกกี้" เหล่านี้อย่างชัดเจน อย่างไรก็ตาม แอปอาจใช้โค้ดและไลบรารีของบุคคลที่สามที่ใช้ "คุกกี้" เพื่อรวบรวมข้อมูลและปรับปรุงบริการของพวกเขา คุณมีตัวเลือกที่จะยอมรับหรือปฏิเสธคุกกี้เหล่านี้ และรู้ว่าเมื่อใดที่คุกกี้จะถูกส่งไปยังอุปกรณ์ของคุณ หากคุณเลือกที่จะปฏิเสธคุกกี้ของเรา คุณอาจไม่สามารถใช้บริการบางส่วนได้</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-shield-alt me-2"></i>ความปลอดภัย</h3>
+            <p>เราให้ความสำคัญกับความไว้วางใจของคุณในการให้ข้อมูลส่วนบุคคลของคุณแก่เรา ดังนั้นเราจึงมุ่งมั่นที่จะใช้วิธีการปกป้องข้อมูลดังกล่าวที่เป็นที่ยอมรับในเชิงพาณิชย์ แต่โปรดจำไว้ว่าไม่มีวิธีการส่งข้อมูลทางอินเทอร์เน็ตหรือวิธีการจัดเก็บข้อมูลอิเล็กทรอนิกส์ใดที่ปลอดภัยและเชื่อถือได้ 100% และเราไม่สามารถรับประกันความปลอดภัยได้อย่างสมบูรณ์</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-external-link-alt me-2"></i>ลิงค์ไปยังเว็บไซต์อื่น</h3>
+            <p>บริการนี้อาจมีลิงก์ไปยังเว็บไซต์อื่น หากคุณคลิกลิงก์ของบุคคลที่สาม คุณจะถูกนำไปยังไซต์นั้น โปรดทราบว่าไซต์ภายนอกเหล่านี้ไม่ได้ดำเนินการโดยเรา ดังนั้น เราขอแนะนำอย่างยิ่งให้คุณตรวจสอบนโยบายความเป็นส่วนตัวของเว็บไซต์เหล่านี้ เราไม่สามารถควบคุมและไม่รับผิดชอบต่อเนื้อหา นโยบายความเป็นส่วนตัว หรือแนวปฏิบัติของไซต์หรือบริการของบุคคลที่สาม</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-child me-2"></i>ความเป็นส่วนตัวของเด็ก</h3>
+            <p>บริการเหล่านี้ไม่ได้กล่าวถึงผู้ที่มีอายุต่ำกว่า 13 ปี เราไม่ได้รวบรวมข้อมูลที่สามารถระบุตัวบุคคลได้จากเด็กอายุต่ำกว่า 13 ปี ในกรณีที่เราพบว่าเด็กอายุต่ำกว่า 13 ปีให้ข้อมูลส่วนบุคคลแก่เรา เราจะลบข้อมูลนี้ออกจากเซิร์ฟเวอร์ของเราทันที หากคุณเป็นพ่อแม่หรือผู้ปกครองและคุณทราบว่าบุตรหลานของคุณได้ให้ข้อมูลส่วนบุคคลแก่เรา โปรดติดต่อเราเพื่อที่เราจะได้ดำเนินการที่จำเป็นได้</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-sync-alt me-2"></i>การเปลี่ยนแปลงนโยบาย</h3>
+            <p>เราอาจปรับปรุงนโยบายความเป็นส่วนตัวของเราเป็นครั้งคราว ดังนั้น คุณควรตรวจสอบหน้านี้เป็นระยะๆ หากมีการเปลี่ยนแปลงใดๆ เราจะแจ้งให้คุณทราบถึงการเปลี่ยนแปลงใด ๆ โดยการโพสต์นโยบายความเป็นส่วนตัวใหม่ในหน้านี้</p>
+        </div>
+
+        <div class="content-section">
+            <h3><i class="fas fa-envelope me-2"></i>ติดต่อเรา</h3>
+            <p>หากคุณมีคำถามหรือข้อเสนอแนะเกี่ยวกับนโยบายความเป็นส่วนตัวของเรา อย่าลังเลที่จะติดต่อเราที่</p>
+            <p><i class="fas fa-envelope me-2"></i>thepphakonkhamsalueng@gmail.com</p>
+        </div>
+    </div>
+
+    <!-- ส่วนท้าย -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-logo">
+                <!-- โลโก้สีปกติ ไม่ใช่สีขาว -->
+                <img src="https://raw.githubusercontent.com/hunmai/icon/refs/heads/main/icon_kham.png" alt="KHAM VPN Logo">
+            </div>
+            <p>นโยบายความเป็นส่วนตัว</p>
+            <p class="copyright">&copy; 2024-2025 KHAM VPN. สงวนลิขสิทธิ์</p>
+        </div>
+    </footer>
+
+    <!-- ปุ่มกลับขึ้นด้านบน -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ฟังก์ชันสำหรับปุ่มกลับขึ้นด้านบน
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // ฟังก์ชันสำหรับ navbar เมื่อเลื่อน
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // ฟังก์ชันสำหรับ progress bar การอ่าน
+        window.addEventListener('scroll', function() {
+            const winHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset;
+            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+            const progressBar = document.getElementById('readingProgress');
+            progressBar.style.width = scrollPercent + '%';
+        });
+        
+        // เพิ่มเอฟเฟกต์เมื่อโหลดหน้าเว็บ
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentSections = document.querySelectorAll('.content-section');
+            contentSections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 150 * index);
+            });
+            
+            // เอฟเฟกต์สำหรับ header
+            const header = document.querySelector('.header-section');
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                header.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }, 300);
+        });
+        
+        // เอฟเฟกต์เมื่อเมาส์ hover บน navbar brand
+        const navbarBrand = document.querySelector('.navbar-brand');
+        navbarBrand.addEventListener('mouseenter', function() {
+            this.querySelector('img').style.transform = 'rotate(10deg) scale(1.1)';
+        });
+        
+        navbarBrand.addEventListener('mouseleave', function() {
+            this.querySelector('img').style.transform = 'rotate(0) scale(1)';
+        });
+    </script>
+</body>
+</html>
