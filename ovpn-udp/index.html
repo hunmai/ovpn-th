@@ -1,0 +1,436 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+<style>
+/* ----- Reset & Base ----- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Fix: changed from center to flex-start to align from top to bottom, preventing overflow */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 30px 20px; /* Add top/bottom padding for extra safety */
+  margin: 0;
+}
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: transparent;
+  padding: 0 5px;
+  display: flex;       
+  flex-direction: column;
+}
+
+/* ----- NOTICE BOX (Fixed mobile covering header issue) ----- */
+.notice-box {
+  background: #fff3cd;
+  border-left: 16px solid #d32f2f;
+  border-radius: 24px;
+  padding: 30px 40px;
+  margin-top: 15px;    /* Fix: added top spacing to push box below browser app bar */
+  margin-bottom: 30px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  height: auto;        
+  overflow: visible;   
+}
+.notice-box i {
+  font-size: 50px;     
+  color: #d32f2f;
+  flex-shrink: 0;
+}
+.notice-box p {
+  font-size: 22px;     
+  font-weight: 700;
+  color: #1e293b;
+  font-family: 'Pyidaungsu', 'Padauk', 'Noto Sans Myanmar', sans-serif; 
+  line-height: 1.6;    
+  margin: 0;
+  letter-spacing: 0.5px;
+  word-break: break-word;
+}
+.notice-box p br {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ----- Box (Script Card) ----- */
+.box {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 20px 24px 24px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.box:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+}
+.box:last-of-type {
+  margin-bottom: 0;
+}
+.label-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.label-row .label-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(233, 84, 32, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #e95420;
+  flex-shrink: 0;
+}
+.label-row label {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e293b;
+  letter-spacing: -0.2px;
+}
+.label-row .tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(233, 84, 32, 0.1);
+  color: #b13e4f;
+  padding: 2px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(233, 84, 32, 0.15);
+}
+textarea {
+  width: 100%;
+  min-height: 82px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  color: #1e293b;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  line-height: 1.6;
+  tab-size: 2;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+textarea:focus {
+  border-color: #e95420;
+  box-shadow: 0 0 0 4px rgba(233, 84, 32, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+textarea::selection {
+  background: rgba(233, 84, 32, 0.2);
+}
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px -6px rgba(245, 87, 108, 0.4);
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+}
+.btn-copy i {
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+.btn-copy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px -8px rgba(245, 87, 108, 0.5);
+  background: linear-gradient(135deg, #f5a3ff, #f76a7e);
+}
+.btn-copy:active {
+  transform: translateY(0px);
+  box-shadow: 0 4px 12px -4px rgba(245, 87, 108, 0.3);
+}
+.btn-copy.copied {
+  background: linear-gradient(135deg, #34b47a, #28a06b);
+  box-shadow: 0 6px 18px -6px rgba(52, 180, 122, 0.4);
+}
+.btn-copy.copied i {
+  animation: pop 0.3s ease;
+}
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.status {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+}
+.status.success {
+  color: #16a34a;
+}
+.status.error {
+  color: #dc2626;
+}
+.status i {
+  font-size: 14px;
+}
+
+/* ----- Footer ----- */
+.footer-note {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-note p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.footer-note .dots {
+  display: flex;
+  gap: 6px;
+}
+.footer-note .dots span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+.footer-note .dots span.active {
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* ----- Responsive (Compressed for mobile screens) ----- */
+@media (max-width: 700px) {
+  body {
+    padding: 20px 10px; /* Reduce top margin for short phone screens */
+  }
+  .container {
+    padding: 0;
+  }
+  .notice-box {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+    gap: 10px;
+    border-left: none;
+    border-top: 8px solid #d32f2f; /* Move red bar to top for added dimension */
+    margin-top: 5px; /* Reduce distance to fit properly */
+    margin-bottom: 20px;
+  }
+  .notice-box i {
+    font-size: 38px;
+  }
+  .notice-box p {
+    font-size: 16px; /* Further reduce Burmese text size to ensure all words are clearly visible */
+    line-height: 1.5;
+  }
+  .box {
+    padding: 16px 16px 18px;
+  }
+  textarea {
+    font-size: 13px;
+    min-height: 68px;
+    padding: 12px 14px;
+  }
+  .btn-copy {
+    padding: 8px 18px;
+    font-size: 13px;
+    width: 100%;
+    justify-content: center;
+  }
+  .action-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .status {
+    justify-content: center;
+    font-size: 12px;
+  }
+  .footer-note {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .notice-box {
+    padding: 18px 12px;
+  }
+  .notice-box p {
+    font-size: 14px; /* For extra small narrow-screen phones */
+    line-height: 1.5;
+  }
+  .notice-box i {
+    font-size: 32px;
+  }
+  .box {
+    padding: 12px 12px 16px;
+  }
+  .label-row label {
+    font-size: 13px;
+  }
+  .label-row .tag {
+    font-size: 10px;
+    padding: 1px 10px;
+  }
+}
+
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+textarea::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+textarea::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #e95420;
+}
+</style>
+
+<div class="container">
+  <div class="notice-box">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>
+      ဒီ Script မှာဖရီးသုံးဖို့အတွက်မဟုတ်သလို ရောင်းခွင့်လည်းမပြုပါ<br>
+      ဖရီးတင်တာဖြစ်ဖြစ် ရောင်းတာဖြစ်ဖြစ် တွေရှိပါက တန်းပိတ်မည်<br>
+      ခွင့်ပြုထားသူကိုပဲအသုံးပြုနိုင်သည်
+    </p>
+  </div>
+
+  <div class="box">
+    <div class="label-row">
+      <span class="label-icon"><i class="fab fa-ubuntu"></i></span>
+      <label for="text1">Ovpn Ubuntu 20</label>
+      <span class="tag">LTS</span>
+    </div>
+    <textarea id="text1">apt update -y && apt upgrade -y && wget https://pukangvpn.xyz/script-v1/Plus && chmod 777 Plus && ./Plus</textarea>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyText('text1','status1', this)">
+        <i class="fas fa-copy"></i> Copy Script
+      </button>
+      <div id="status1" class="status"><i class="fas fa-circle" style="font-size:6px; opacity:0.4;"></i> ready</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="label-row">
+      <span class="label-icon"><i class="fab fa-ubuntu"></i></span>
+      <label for="text2">Ovpn Ubuntu 22</label>
+      <span class="tag">LTS</span>
+    </div>
+    <textarea id="text2">apt update -y && apt upgrade -y && wget https://pukangvpn.xyz/script-v2/Plus && chmod 777 Plus && ./Plus</textarea>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyText('text2','status2', this)">
+        <i class="fas fa-copy"></i> Copy Script
+      </button>
+      <div id="status2" class="status"><i class="fas fa-circle" style="font-size:6px; opacity:0.4;"></i> ready</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="label-row">
+      <span class="label-icon"><i class="fab fa-ubuntu"></i></span>
+      <label for="text3">UDP Ubuntu 20 · 22 · 24</label>
+      <span class="tag">all</span>
+    </div>
+    <textarea id="text3">apt-get remove command-not-found -y && wget https://pukangvpn.xyz/Udp/install_shanvpn.sh && chmod +x install_shanvpn.sh; ./install_shanvpn.sh</textarea>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyText('text3','status3', this)">
+        <i class="fas fa-copy"></i> Copy Script
+      </button>
+      <div id="status3" class="status"><i class="fas fa-circle" style="font-size:6px; opacity:0.4;"></i> ready</div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <p><i class="far fa-clock" style="margin-right:6px;"></i> Copy and paste in terminal</p>
+    <div class="dots">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyText(textId, statusId, btnElement) {
+  const textarea = document.getElementById(textId);
+  const text = textarea.value;
+  const statusEl = document.getElementById(statusId);
+  
+  if (!text.trim()) {
+    statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> No text to copy';
+    statusEl.className = 'status error';
+    return;
+  }
+  
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Copied successfully';
+      statusEl.className = 'status success';
+      if (btnElement) {
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = '<i class="fas fa-copy"></i> Copy Script';
+          statusEl.innerHTML = '<i class="fas fa-circle" style="font-size:6px; opacity:0.4;"></i> ready';
+          statusEl.className = 'status';
+        }, 2500);
+      }
+    })
+    .catch(() => {
+      statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Cannot copy';
+      statusEl.className = 'status error';
+    });
+}
+</script>
