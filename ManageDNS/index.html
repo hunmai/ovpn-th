@@ -1,274 +1,704 @@
 <!doctype html>
-<html lang="my" data-theme="light">
+<html lang="th" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DNS RECORD</title>
+  <title>ระบบจัดการ DNS</title>
   <style>
-    :root{
-      --fg:#0b1220; --muted:#5b6b84; --line:#d8e3ee;
+    /* ===== ตัวแปรสีหลัก ===== */
+    :root {
+      --fg: #0b1220;
+      --muted: #5b6b84;
+      --line: #d8e3ee;
 
-      /* Accents */
-      --accent:#0ea5e9;          /* teal-blue for IPs */
-      --accent-ink:#0ea5e9;
-      --ok:#10b981;              /* green for hostnames */
-      --ok-bright:#059669;
-      --warn:#f59e0b; --err:#ef4444;
+      /* สีหลัก */
+      --accent: #0ea5e9;
+      --accent-ink: #0ea5e9;
+      --ok: #10b981;
+      --ok-bright: #059669;
+      --warn: #f59e0b;
+      --err: #ef4444;
 
-      --time:#8b5cf6;            /* Server Time (purple) */
-      --loc:#06b6d4;             /* Location (teal) */
+      --time: #8b5cf6;
+      --loc: #06b6d4;
 
-      /* Softer, more eye-pleasing background palette */
-      --bg1:#f1f8ff;   /* soft sky */
-      --bg2:#ecfff7;   /* mint */
-      --bg3:#f7ecff;   /* lavender */
-      --card:#ffffffcf; --card-tint:#f8fafc;
+      /* พื้นหลัง gradient สวยๆ */
+      --bg1: #f0f9ff;
+      --bg2: #ecfdf5;
+      --bg3: #f5f3ff;
 
-      /* Gentle, modern gradient for buttons */
-      --tri: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #60a5fa 100%);
+      --card: #ffffffcf;
+      --card-tint: #f8fafc;
 
-      --shadow-strong: 0 20px 40px rgba(11,18,32,.12);
-      --shadow-soft:   0 8px 20px rgba(11,18,32,.05);
-      --card-bg-plain:#ffffffd9;
-      --table-row:#fff;
-      --grain: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'>\
-<filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.035'/></feComponentTransfer></filter>\
-<rect width='100%' height='100%' filter='url(#f)'/>\
-</svg>");
+      --tri: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
+      --tri-soft: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+
+      --shadow-strong: 0 20px 40px rgba(11, 18, 32, .12);
+      --shadow-soft: 0 8px 20px rgba(11, 18, 32, .05);
+      --card-bg-plain: #ffffffd9;
+      --table-row: #fff;
+      --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.035'/></feComponentTransfer></filter><rect width='100%' height='100%' filter='url(#f)'/></svg>");
     }
 
-    /* ===== Dark mode (soft deep tones) ===== */
-    [data-theme="dark"]{
-      --fg:#e5eefc; --muted:#9fb1c9; --line:#223043;
-      --accent:#7dd3fc; --accent-ink:#7dd3fc;
-      --ok:#34d399; --ok-bright:#34d399;
-      --time:#c4b5fd;
-      --loc:#67e8f9;
-      --bg1:#07141f;   /* deep blue-charcoal */
-      --bg2:#0b1e2a;   /* slate-teal */
-      --bg3:#101f33;   /* night blue */
-      --card:#0e1726ee; --card-tint:#0a1320;
-      --warn:#fbbf24; --err:#f87171;
-      --shadow-strong: 0 20px 40px rgba(0,0,0,.45);
-      --shadow-soft:   0 8px 20px rgba(0,0,0,.35);
-      --card-bg-plain:#0f172acc;
-      --table-row:#0c1423;
+    /* ===== โหมดมืด ===== */
+    [data-theme="dark"] {
+      --fg: #e5eefc;
+      --muted: #9fb1c9;
+      --line: #223043;
+      --accent: #7dd3fc;
+      --accent-ink: #7dd3fc;
+      --ok: #34d399;
+      --ok-bright: #34d399;
+      --time: #c4b5fd;
+      --loc: #67e8f9;
+      --bg1: #07141f;
+      --bg2: #0b1e2a;
+      --bg3: #101f33;
+      --card: #0e1726ee;
+      --card-tint: #0a1320;
+      --warn: #fbbf24;
+      --err: #f87171;
+      --shadow-strong: 0 20px 40px rgba(0, 0, 0, .45);
+      --shadow-soft: 0 8px 20px rgba(0, 0, 0, .35);
+      --card-bg-plain: #0f172acc;
+      --table-row: #0c1423;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      color:var(--fg);
+    /* ===== รีเซ็ต & พื้นฐาน ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html,
+    body {
+      height: 100%;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--fg);
       background:
         radial-gradient(1200px 700px at 15% 0%, var(--bg1) 0%, transparent 60%),
         radial-gradient(1300px 800px at 90% 20%, var(--bg2) 0%, transparent 55%),
         radial-gradient(900px 600px at 50% 110%, var(--bg3) 0%, transparent 50%),
-        linear-gradient(160deg,#f8fafc 0%, #f0fbff 45%, #f9f5ff 100%);
-      position:relative;
-      min-height:100vh; display:flex; align-items:start; justify-content:center; padding:20px;
+        linear-gradient(160deg, #f8fafc 0%, #f0f9ff 45%, #faf5ff 100%);
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: start;
+      justify-content: center;
+      padding: 20px;
       transition: background .3s ease, color .2s ease;
     }
-    body::after{
-      content:""; position:fixed; inset:0; pointer-events:none;
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
       background-image: var(--grain);
-      mix-blend-mode:multiply; opacity:.22;
+      mix-blend-mode: multiply;
+      opacity: .22;
     }
-    [data-theme="dark"]{
+    [data-theme="dark"] body {
       background:
         radial-gradient(1400px 700px at 10% -10%, var(--bg1) 0%, transparent 60%),
         radial-gradient(1400px 800px at 100% 30%, var(--bg2) 0%, transparent 55%),
         radial-gradient(900px 600px at 50% 110%, var(--bg3) 0%, transparent 50%),
-        linear-gradient(160deg,#06111a 0%, #0a1a28 50%, #0d2134 100%);
+        linear-gradient(160deg, #06111a 0%, #0a1a28 50%, #0d2134 100%);
     }
 
-    .wrap{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:18px}
-
-    .card{
-      position:relative;
-      background: linear-gradient(180deg,var(--card) 0%,var(--card-tint) 100%);
-      backdrop-filter:blur(14px);
-      border:1px solid var(--line); border-radius:16px;
-      box-shadow:var(--shadow-strong); padding:28px 24px;
-      transition: background .3s ease, border-color .2s ease, box-shadow .2s ease;
+    /* ===== คอนเทนเนอร์หลัก ===== */
+    .wrap {
+      width: 100%;
+      max-width: 1060px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      animation: fadeUp .6s ease both;
+    }
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    h1{font-size:28px;margin-bottom:6px;letter-spacing:.3px}
-    h2{font-size:22px;margin-bottom:10px;letter-spacing:.2px}
-    .byline{color:var(--accent-ink);font-weight:800;margin-bottom:14px;font-size:15px}
-    form{display:grid;gap:14px}
-    .row{display:grid;gap:8px;grid-template-columns:1fr;align-items:center}
-
-    label{color:var(--muted);font-size:14px}
-    input,select{
-      width:100%;height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;
-      font-size:16px;background:#fff;outline:none;transition:border-color .2s,box-shadow .2s, background .2s, color .2s;
-      color:#0b1220;
+    /* ===== การ์ด ===== */
+    .card {
+      position: relative;
+      background: linear-gradient(180deg, var(--card) 0%, var(--card-tint) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-strong);
+      padding: 28px 26px;
+      transition: background .3s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
     }
-    [data-theme="dark"] input,[data-theme="dark"] select{
-      background:#0b1422; color:var(--fg); border-color:#1f2a38;
-    }
-    input:focus,select:focus{
-      border-color:transparent;
-      box-shadow:0 0 0 4px rgba(14,165,233,.18), inset 0 0 0 1.5px var(--accent)
-    }
-    .btns{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
-
-    /* Buttons */
-    button{
-      height:44px;border-radius:12px;font-weight:800;letter-spacing:.2px;cursor:pointer;
-      border:0; padding:0 14px;
-      background-image:var(--tri); background-size:200% 100%;
-      color:#fff;
-      box-shadow:0 8px 20px rgba(11,18,32,.15);
-      transition: background-position .2s ease, transform .15s ease, filter .15s ease, box-shadow .2s ease;
-    }
-    button:hover{transform:translateY(-1px); background-position:right center; filter:saturate(1.05)}
-    button:active{transform:translateY(0)}
-
-    .btn-mini{height:34px;padding:0 10px;border-radius:10px;font-weight:700}
-    .row-actions .btn-mini{
-      background-image:var(--tri); background-size:200% 100%; color:#fff; border:0;
-    }
-    .row-actions .btn-mini.ghost{
-      background:transparent; color:transparent; border:2px solid transparent;
-      background-image:var(--tri); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-      border-image: var(--tri) 1; box-shadow:0 6px 12px rgba(11,18,32,.08);
+    .card:hover {
+      box-shadow: var(--shadow-strong), 0 0 0 1px var(--accent) inset;
+      transform: translateY(-2px);
     }
 
-    #msg,#lookupMsg,#searchMsg{
-      margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--line);
-      background:#f8fafc;min-height:44px;white-space:pre-wrap; transition: background .2s, border-color .2s, color .2s;
-      color:#0b1220;
+    /* ===== หัวข้อ ===== */
+    h1 {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: -.3px;
+      background: var(--tri);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
     }
-    [data-theme="dark"] #msg,[data-theme="dark"] #lookupMsg,[data-theme="dark"] #searchMsg{
-      background:#0b1422; color:var(--fg); border-color:#1f2a38;
+    h2 {
+      font-size: 23px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -.2px;
+      color: var(--fg);
     }
-    .footer{
-      text-align:center;margin-top:2px;font-size:13px;color:var(--fg);background:var(--card-bg-plain);border:1px solid var(--line);
-      border-radius:12px;padding:10px;box-shadow:var(--shadow-soft)
+    .byline {
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 15px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 10px;
     }
-    .msg-ok{border-color:var(--ok)!important;background:#ecfdf5!important}
-    .msg-warn{border-color:var(--warn)!important;background:#fffbeb!important}
-    .msg-err{border-color:var(--err)!important;background:#fef2f2!important}
-    [data-theme="dark"] .msg-ok{background:#062814!important}
-    [data-theme="dark"] .msg-warn{background:#2a1f06!important}
-    [data-theme="dark"] .msg-err{background:#2a0b0b!important}
-
-    /* Toggle: ON = yellow */
-    .switch{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-    .switch input{position:absolute;opacity:0;width:0;height:0}
-    .slider{
-      position:relative;width:44px;height:24px;border-radius:999px;background:#e5e7eb;border:1px solid #d1d5db;
-      transition:background .2s,border-color .2s,box-shadow .2s; box-shadow:inset 0 2px 4px rgba(0,0,0,.06)
-    }
-    [data-theme="dark"] .slider{ background:#0b1422; border-color:#1f2a38; }
-    .slider::after{
-      content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:999px;
-      box-shadow:0 2px 6px rgba(0,0,0,.15);transition:left .2s
-    }
-    [data-theme="dark"] .slider::after{ background:#e5eefc; }
-    .switch input:checked + .slider{
-      background:#fde68a; border-color:#f59e0b; box-shadow:0 0 0 3px rgba(245,158,11,.25) inset;
-    }
-    .switch input:checked + .slider::after{left:23px}
-
-    .cf-note{font-size:12px;color:var(--muted)}
-    .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--fg);background:#fff;margin-left:8px}
-    [data-theme="dark"] .pill{ background:#0b1422; }
-
-    /* Table */
-    .table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch}
-    .table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:8px;min-width:720px}
-    .table thead th{text-align:left;font-size:12px;color:var(--muted);padding:0 10px;white-space:nowrap}
-    .table tbody tr{background:var(--table-row);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(11,18,32,.05)}
-    [data-theme="dark"] .table tbody tr{ box-shadow:0 4px 10px rgba(0,0,0,.35) }
-    .table td{padding:10px;font-size:14px;vertical-align:middle; color:var(--fg)}
-
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
-    .small{font-size:13px;color:var(--muted)}
-    .row-actions{display:flex;gap:6px;flex-wrap:wrap}
-    .inpt{height:34px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font-size:14px;width:100%}
-    [data-theme="dark"] .inpt{ background:#0b1422; color:var(--fg); }
-    .sel{height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff}
-    [data-theme="dark"] .sel{ background:#0b1422; color:var(--fg); }
-
-    /* Status colors */
-    .status{ display:grid; gap:12px; grid-template-columns:1fr; }
-    .status .items{ display:grid; gap:10px; grid-template-columns:1fr; }
-    .pillstat{ display:flex; flex-direction:column; gap:4px; border:1px solid var(--line); background:var(--table-row); border-radius:14px; padding:10px 12px; min-height:56px; justify-content:center }
-    .pillstat .k{font-size:12px;color:var(--muted)}
-    .pillstat .v{font-weight:700}
-
-    #serverTime{ color: var(--time); }
-    #yourIp{ color: var(--accent); }
-    #yourLoc{ color: var(--loc); }
-
-    /* === Stronger selectors to beat `.table td` === */
-    .table td.cell-name{ color: var(--ok-bright) !important; font-weight:700 !important; }
-    .table td .cell-content.ip{ color: var(--accent) !important; font-weight:700 !important; }
-    .table td .cell-content.host{ color: var(--ok-bright) !important; font-weight:700 !important; }
-
-    @media (min-width: 720px){
-      .status .items{ grid-template-columns:1fr 1fr 1fr; }
-    }
-    @media (max-width: 480px){
-      h1{font-size:24px}
-      h2{font-size:20px}
-      .table td{font-size:13px}
-      button,.btn-mini{height:42px}
+    .byline span {
+      color: var(--accent-ink);
     }
 
-    /* Theme FAB */
-    .theme-fab{
-      position:fixed; right:18px; bottom:18px; z-index:9999;
-      width:54px; height:54px; border-radius:999px;
-      display:inline-flex; align-items:center; justify-content:center;
-      background-image:var(--tri); background-size:200% 100%;
-      color:#fff; border:0;
-      box-shadow:0 14px 30px rgba(59,130,246,.35);
-      cursor:pointer; transition: transform .15s ease, filter .2s ease, background-position .2s ease;
+    /* ===== ฟอร์ม ===== */
+    form {
+      display: grid;
+      gap: 14px;
     }
-    .theme-fab:hover{ transform: translateY(-2px); filter:saturate(1.05); background-position:right center }
-    .theme-fab:active{ transform: translateY(0) }
-    .theme-fab svg{ width:24px; height:24px }
-    .icon-sun{ display:inline }
-    .icon-moon{ display:none }
-    [data-theme="dark"] .icon-sun{ display:none }
-    [data-theme="dark"] .icon-moon{ display:inline }
+    .row {
+      display: grid;
+      gap: 6px;
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+    label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+
+    /* ===== อินพุต & ซีเล็ค ===== */
+    input,
+    select {
+      width: 100%;
+      height: 46px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      font-size: 16px;
+      background: #fff;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s, background .25s, color .25s;
+      color: #0b1220;
+    }
+    [data-theme="dark"] input,
+    [data-theme="dark"] select {
+      background: #0b1422;
+      color: var(--fg);
+      border-color: #1f2a38;
+    }
+    input:focus,
+    select:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, .18), inset 0 0 0 2px var(--accent);
+    }
+
+    /* ===== ปุ่ม ===== */
+    .btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    button {
+      height: 46px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: .3px;
+      cursor: pointer;
+      border: 0;
+      padding: 0 20px;
+      background: var(--tri);
+      background-size: 200% 100%;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(11, 18, 32, .15);
+      transition: background-position .25s ease, transform .15s ease, filter .15s ease, box-shadow .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .15), transparent 60%);
+      pointer-events: none;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      background-position: right center;
+      filter: saturate(1.05);
+      box-shadow: 0 12px 32px rgba(11, 18, 32, .2);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(11, 18, 32, .1);
+    }
+
+    .btn-mini {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      background: var(--tri);
+      background-size: 200% 100%;
+      color: #fff;
+      border: 0;
+      box-shadow: 0 4px 12px rgba(11, 18, 32, .1);
+    }
+    .btn-mini.ghost {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      box-shadow: none;
+    }
+    .btn-mini.ghost:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ===== สวิตช์ ===== */
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      border: 1.5px solid #d1d5db;
+      transition: background .25s, border-color .25s, box-shadow .25s;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, .06);
+    }
+    [data-theme="dark"] .slider {
+      background: #0b1422;
+      border-color: #1f2a38;
+    }
+    .slider::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+      transition: left .25s cubic-bezier(.4, .0, .2, 1);
+    }
+    [data-theme="dark"] .slider::after {
+      background: #e5eefc;
+    }
+    .switch input:checked+.slider {
+      background: #fde68a;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, .2) inset;
+    }
+    .switch input:checked+.slider::after {
+      left: 25px;
+    }
+
+    /* ===== ข้อความแจ้งเตือน ===== */
+    #msg,
+    #lookupMsg,
+    #searchMsg {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: #f8fafc;
+      min-height: 48px;
+      white-space: pre-wrap;
+      transition: background .2s, border-color .2s, color .2s;
+      color: #0b1220;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    [data-theme="dark"] #msg,
+    [data-theme="dark"] #lookupMsg,
+    [data-theme="dark"] #searchMsg {
+      background: #0b1422;
+      color: var(--fg);
+      border-color: #1f2a38;
+    }
+    .msg-ok {
+      border-color: var(--ok) !important;
+      background: #ecfdf5 !important;
+    }
+    .msg-warn {
+      border-color: var(--warn) !important;
+      background: #fffbeb !important;
+    }
+    .msg-err {
+      border-color: var(--err) !important;
+      background: #fef2f2 !important;
+    }
+    [data-theme="dark"] .msg-ok {
+      background: #062814 !important;
+    }
+    [data-theme="dark"] .msg-warn {
+      background: #2a1f06 !important;
+    }
+    [data-theme="dark"] .msg-err {
+      background: #2a0b0b !important;
+    }
+
+    /* ===== ไอคอนในข้อความ ===== */
+    .cf-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fg);
+      background: #fff;
+      margin-left: 8px;
+    }
+    [data-theme="dark"] .pill {
+      background: #0b1422;
+    }
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* ===== สถานะ ===== */
+    .status .items {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    .pillstat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border: 1.5px solid var(--line);
+      background: var(--table-row);
+      border-radius: 16px;
+      padding: 14px 16px;
+      min-height: 60px;
+      justify-content: center;
+      transition: background .2s, border-color .2s;
+    }
+    .pillstat .k {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .pillstat .v {
+      font-weight: 700;
+      font-size: 16px;
+    }
+    #serverTime {
+      color: var(--time);
+    }
+    #yourIp {
+      color: var(--accent);
+    }
+    #yourLoc {
+      color: var(--loc);
+    }
+
+    /* ===== ตาราง ===== */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 8px;
+    }
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      min-width: 720px;
+    }
+    .table thead th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 0 12px 8px 12px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--line);
+    }
+    .table tbody tr {
+      background: var(--table-row);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(11, 18, 32, .04);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .table tbody tr:hover {
+      transform: scale(1.002);
+      box-shadow: 0 8px 24px rgba(11, 18, 32, .08);
+    }
+    [data-theme="dark"] .table tbody tr {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+    }
+    .table td {
+      padding: 12px 12px;
+      font-size: 14px;
+      vertical-align: middle;
+      color: var(--fg);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .table td:first-child {
+      border-left: 1px solid var(--line);
+      border-radius: 16px 0 0 16px;
+    }
+    .table td:last-child {
+      border-right: 1px solid var(--line);
+      border-radius: 0 16px 16px 0;
+    }
+
+    .table td .ip {
+      color: var(--accent) !important;
+      font-weight: 700 !important;
+    }
+    .table td .host {
+      color: var(--ok-bright) !important;
+      font-weight: 700 !important;
+    }
+    .cell-name {
+      color: var(--ok-bright) !important;
+      font-weight: 700 !important;
+    }
+
+    /* ===== แถวการดำเนินการ ===== */
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .inpt {
+      height: 36px;
+      padding: 6px 10px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      width: 100%;
+      background: #fff;
+      color: #0b1220;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .inpt:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, .15);
+    }
+    [data-theme="dark"] .inpt {
+      background: #0b1422;
+      color: var(--fg);
+      border-color: #1f2a38;
+    }
+    .sel {
+      height: 36px;
+      padding: 0 10px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fff;
+      color: #0b1220;
+    }
+    [data-theme="dark"] .sel {
+      background: #0b1422;
+      color: var(--fg);
+      border-color: #1f2a38;
+    }
+
+    /* ===== ฟุตเตอร์ ===== */
+    .footer {
+      text-align: center;
+      margin-top: 2px;
+      font-size: 14px;
+      color: var(--muted);
+      background: var(--card-bg-plain);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(8px);
+    }
+
+    /* ===== ปุ่มเปลี่ยนธีม ===== */
+    .theme-fab {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 9999;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--tri);
+      background-size: 200% 100%;
+      color: #fff;
+      border: 0;
+      box-shadow: 0 14px 36px rgba(59, 130, 246, .35);
+      cursor: pointer;
+      transition: transform .15s ease, filter .2s ease, background-position .2s ease, box-shadow .2s ease;
+    }
+    .theme-fab:hover {
+      transform: translateY(-3px) scale(1.03);
+      filter: saturate(1.05);
+      background-position: right center;
+      box-shadow: 0 18px 44px rgba(59, 130, 246, .45);
+    }
+    .theme-fab:active {
+      transform: translateY(0) scale(.97);
+    }
+    .theme-fab svg {
+      width: 26px;
+      height: 26px;
+    }
+    .icon-sun {
+      display: inline;
+    }
+    .icon-moon {
+      display: none;
+    }
+    [data-theme="dark"] .icon-sun {
+      display: none;
+    }
+    [data-theme="dark"] .icon-moon {
+      display: inline;
+    }
+
+    /* ===== Responsive ===== */
+    @media (min-width: 720px) {
+      .status .items {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px 16px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .table td {
+        font-size: 13px;
+        padding: 10px 8px;
+      }
+      button,
+      .btn-mini {
+        height: 42px;
+        font-size: 14px;
+      }
+      .theme-fab {
+        width: 48px;
+        height: 48px;
+        right: 16px;
+        bottom: 16px;
+      }
+      .theme-fab svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+    @media (max-width: 480px) {
+      .btns {
+        flex-direction: column;
+      }
+      .btns button {
+        width: 100%;
+      }
+      .row-actions {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .row-actions .btn-mini {
+        width: 100%;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
 
-    <!-- TOP STATUS BAR -->
+    <!-- ===== แถบสถานะ ===== -->
     <div class="card status" aria-live="polite">
-      <h2 style="margin-bottom:2px">Status</h2>
+      <h2 style="margin-bottom:2px">📊 สถานะ</h2>
       <div class="items">
         <div class="pillstat">
-          <div class="k">Server Time</div>
+          <div class="k">⏱️ เวลาของเซิร์ฟเวอร์</div>
           <div id="serverTime" class="v mono">—</div>
         </div>
         <div class="pillstat">
-          <div class="k">Your IP</div>
+          <div class="k">🌐 IP ของคุณ</div>
           <div id="yourIp" class="v mono">—</div>
         </div>
         <div class="pillstat">
-          <div class="k">Location</div>
+          <div class="k">📍 ตำแหน่งที่ตั้ง</div>
           <div id="yourLoc" class="v">—</div>
         </div>
       </div>
     </div>
 
-    <!-- DNS Record -->
+    <!-- ===== บันทึก DNS ===== -->
     <div class="card">
-      <h1>DNS RECORD</h1>
-      <p class="byline">Power By : Jue Htet</p>
+      <h1>🛠️บันทึก DNS</h1>
 
       <form id="dnsForm" autocomplete="off">
         <div class="row">
-          <label for="type">Type</label>
+          <label for="type">ประเภท</label>
           <select id="type" required>
             <option value="A">A</option>
             <option value="AAAA">AAAA</option>
@@ -282,24 +712,24 @@
         </div>
 
         <div class="row">
-          <label for="host">Host</label>
-          <input id="host" type="text" placeholder="sub (or sub.pukangvpn.xyz)" required />
+          <label for="host">โฮสต์</label>
+          <input id="host" type="text" placeholder="ชื่อย่อย (หรือ sub.pukangvpn.xyz)" required />
         </div>
 
         <div class="row">
-          <label id="contentLabel" for="content">IPv4 Address</label>
-          <input id="content" type="text" placeholder="e.g. 203.0.113.10" required />
+          <label id="contentLabel" for="content">ที่อยู่ IPv4</label>
+          <input id="content" type="text" placeholder="เช่น 203.0.113.10" required />
         </div>
 
         <div class="row" id="prioRow" style="display:none">
-          <label for="priority">Priority</label>
-          <input id="priority" type="number" min="0" max="65535" placeholder="10 (MX only)" />
+          <label for="priority">ลำดับความสำคัญ</label>
+          <input id="priority" type="number" min="0" max="65535" placeholder="10 (เฉพาะ MX)" />
         </div>
 
         <div class="row">
           <label for="ttl">TTL</label>
           <select id="ttl">
-            <option value="1" selected>Auto</option>
+            <option value="1" selected>อัตโนมัติ</option>
             <option value="60">60</option>
             <option value="120">120</option>
             <option value="300">300</option>
@@ -309,92 +739,91 @@
           </select>
         </div>
 
-        <!-- Proxy toggle -->
         <div class="row" id="proxiedRow">
-          <label for="proxied">Proxy through Cloudflare</label>
+          <label for="proxied">พรอกซีผ่าน Cloudflare</label>
           <div>
-            <label class="switch" aria-label="Proxy through Cloudflare">
+            <label class="switch" aria-label="พรอกซีผ่าน Cloudflare">
               <input id="proxied" type="checkbox" checked />
               <span class="slider" aria-hidden="true"></span>
             </label>
-            <span class="pill">A / AAAA / CNAME only</span>
-            <div class="cf-note">DNS ONLY အတွက် ခလုတ်ကို ပိတ်ပေးပါ။</div>
+            <span class="pill">เฉพาะ A / AAAA / CNAME</span>
+            <div class="cf-note">📌 สำหรับโหมด DNS ONLY ให้ปิดสวิตช์นี้</div>
           </div>
         </div>
 
         <div class="btns">
-          <button type="submit">Add / Update</button>
-          <button type="button" id="resetBtn">Reset</button>
+          <button type="submit">➕ เพิ่ม / อัปเดต</button>
+          <button type="button" id="resetBtn">🔄 รีเซ็ต</button>
         </div>
         <div id="msg"></div>
 
-        <div class="small" style="margin-top:8px">
-          Host ကို short (e.g. <span class="mono">app</span>) ရိုက်ရင်
-          <span class="mono">app.pukangvon.xyz</span> လို append လုပ်ပေးမယ်။
+        <div class="small" style="margin-top:10px">
+          💡 สามารถพิมพ์โฮสต์แบบสั้น (เช่น <span class="mono">app</span>) แล้วระบบจะเติม <span class="mono">.pukangvpn.xyz</span> ให้อัตโนมัติ
         </div>
       </form>
     </div>
 
-    <!-- Host to IP -->
+    <!-- ===== แปลงโฮสต์เป็น IP ===== -->
     <div class="card">
-      <h2>Host to IP <span class="small">(Lookup)</span></h2>
+      <h2>🔍 แปลงโฮสต์เป็น IP <span class="small">(ค้นหา)</span></h2>
       <div class="row">
-        <label for="lookupHost">Host</label>
-        <input id="lookupHost" type="text" placeholder="sub (or full hostname)" />
+        <label for="lookupHost">โฮสต์</label>
+        <input id="lookupHost" type="text" placeholder="ชื่อย่อย หรือชื่อเต็ม" />
       </div>
       <div class="btns" style="margin-top:12px">
-        <button type="button" id="lookupBtn">Lookup</button>
-        <button type="button" id="lookupReset">Clear</button>
+        <button type="button" id="lookupBtn">🔎 ค้นหา</button>
+        <button type="button" id="lookupReset">🗑️ ล้าง</button>
       </div>
       <div id="lookupMsg"></div>
     </div>
 
-    <!-- Cloudflare Search / Manage -->
+    <!-- ===== จัดการบันทึก DNS ของ Cloudflare ===== -->
     <div class="card">
-      <h2>Cloudflare DNS Records (Search / Edit / Delete)</h2>
+      <h2>☁️ บันทึก DNS ของ Cloudflare <span class="small">(ค้นหา / แก้ไข / ลบ)</span></h2>
       <div class="row">
-        <label for="cfName">Search</label>
-        <input id="cfName" placeholder="Search by name or content (partial match)" />
+        <label for="cfName">ค้นหา</label>
+        <input id="cfName" placeholder="ค้นหาด้วยชื่อหรือเนื้อหา (บางส่วน)" />
       </div>
       <div class="row">
-        <label for="cfType">Type</label>
+        <label for="cfType">ประเภท</label>
         <select id="cfType">
-          <option value="">(Any)</option>
+          <option value="">(ทั้งหมด)</option>
           <option>A</option><option>AAAA</option><option>CNAME</option>
           <option>TXT</option><option>MX</option><option>NS</option>
           <option>CAA</option><option>HTTPS</option>
         </select>
       </div>
       <div class="btns">
-        <button type="button" id="cfSearch">Search</button>
-        <button type="button" id="cfClear">Clear</button>
+        <button type="button" id="cfSearch">🔎 ค้นหา</button>
+        <button type="button" id="cfClear">🗑️ ล้าง</button>
       </div>
-      <div id="searchMsg" class="small">အောက်က results က Cloudflare မှ တိုက်ရိုက် query လုပ်ထားတာပါ။</div>
+      <div id="searchMsg" class="small">📋 ผลลัพธ์ด้านล่างถูกดึงมาจาก Cloudflare โดยตรง</div>
 
       <div class="table-wrap">
-        <table class="table" aria-label="Cloudflare search results">
+        <table class="table" aria-label="ผลลัพธ์การค้นหา Cloudflare">
           <thead>
             <tr>
-              <th>Type</th><th>Name</th><th>Content</th><th>TTL</th><th>Proxy</th><th>Actions</th>
+              <th>ประเภท</th><th>ชื่อ</th><th>เนื้อหา</th><th>TTL</th><th>พรอกซี</th><th>การดำเนินการ</th>
             </tr>
           </thead>
           <tbody id="cfBody"></tbody>
         </table>
       </div>
 
-      <div class="btns" style="justify-content:flex-end;margin-top:10px">
-        <button class="btn-mini" id="prevPage">Prev</button>
-        <button class="btn-mini" id="nextPage">Next</button>
+      <div class="btns" style="justify-content:flex-end;margin-top:12px">
+        <button class="btn-mini" id="prevPage">◀ ก่อนหน้า</button>
+        <button class="btn-mini" id="nextPage">ถัดไป ▶</button>
       </div>
     </div>
 
+    <!-- ===== ฟุตเตอร์ ===== -->
     <div class="footer">
-      Admin : Jue Htet မှစေတနာဖြင့် ပြုလုပ်ပေးထားပါသည်။
+      👨‍💻 ผู้ดูแลระบบ : PUKANG VPN <strong>
     </div>
   </div>
 
-  <!-- Theme toggle -->
-  <button id="themeToggle" class="theme-fab" title="Dark/Light Toggle" aria-label="Toggle dark or light theme">
+  <!-- ===== ปุ่มเปลี่ยนธีม ===== -->
+  <button id="themeToggle" class="theme-fab" title="สลับธีมสว่าง/มืด" aria-label="สลับธีมสว่างหรือมืด">
     <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="4"></circle>
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -405,429 +834,469 @@
   </button>
 
   <script>
-    /* === UPDATED DOMAIN & WORKER ENDPOINT === */
+    /* ===== คอนฟิก ===== */
     const ROOT = "pukangvpn.xyz";
     const API_BASE = "https://sanglungmom.pukangvpn.workers.dev";
-    const API_URL  = API_BASE + "/dns";
+    const API_URL = API_BASE + "/dns";
 
-    const typeEl=document.getElementById("type"),
-      hostEl=document.getElementById("host"),
-      contentEl=document.getElementById("content"),
-      contentLabel=document.getElementById("contentLabel"),
-      prioRow=document.getElementById("prioRow"),
-      priorityEl=document.getElementById("priority"),
-      proxiedRow=document.getElementById("proxiedRow"),
-      proxiedEl=document.getElementById("proxied"),
-      ttlEl=document.getElementById("ttl"),
-      msg=document.getElementById("msg");
+    const typeEl = document.getElementById("type"),
+      hostEl = document.getElementById("host"),
+      contentEl = document.getElementById("content"),
+      contentLabel = document.getElementById("contentLabel"),
+      prioRow = document.getElementById("prioRow"),
+      priorityEl = document.getElementById("priority"),
+      proxiedRow = document.getElementById("proxiedRow"),
+      proxiedEl = document.getElementById("proxied"),
+      ttlEl = document.getElementById("ttl"),
+      msg = document.getElementById("msg");
 
     const serverTimeEl = document.getElementById("serverTime");
-    const yourIpEl     = document.getElementById("yourIp");
-    const yourLocEl    = document.getElementById("yourLoc");
+    const yourIpEl = document.getElementById("yourIp");
+    const yourLocEl = document.getElementById("yourLoc");
 
-    (function initTheme(){
-      try{
+    /* ===== ธีมเริ่มต้น ===== */
+    (function initTheme() {
+      try {
         const root = document.documentElement;
         const saved = localStorage.getItem("theme");
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const initial = saved || (prefersDark ? "dark" : "light");
         root.setAttribute("data-theme", initial);
-      }catch(e){}
+      } catch (e) {}
     })();
-    document.getElementById("themeToggle").addEventListener("click", ()=>{
+    document.getElementById("themeToggle").addEventListener("click", () => {
       const root = document.documentElement;
       const cur = root.getAttribute("data-theme") || "light";
       const next = (cur === "light") ? "dark" : "light";
       root.setAttribute("data-theme", next);
-      try{ localStorage.setItem("theme", next); }catch(e){}
+      try { localStorage.setItem("theme", next); } catch (e) {}
     });
 
-    async function fetchJSON(url, opt){
+    /* ===== ยูทิล ===== */
+    async function fetchJSON(url, opt) {
       const r = await fetch(url, opt);
-      if(!r.ok) throw new Error(r.status);
+      if (!r.ok) throw new Error(r.status);
       return r.json();
     }
 
-    async function loadFromCFTrace(){
-      try{
-        const r = await fetch("https://1.1.1.1/cdn-cgi/trace", {cache:"no-store"});
-        const t = await r.text();
-        const map = Object.fromEntries(
-          t.trim().split("\n").map(l => l.split("=")).map(([k,v])=>[k, v])
-        );
-        if(map.ts){
-          let ms = Number(map.ts) * 1000;
-          const tzStr = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
-          const tick = () => {
-            serverTimeEl.textContent = new Date(ms).toLocaleString(undefined, {
-              year:"numeric", month:"short", day:"2-digit",
-              hour:"2-digit", minute:"2-digit", second:"2-digit"
-            }) + ` (${tzStr})`;
-            ms += 1000;
-          };
-          tick(); setInterval(tick, 1000);
-        }else{
-          serverTimeEl.textContent = "Unavailable";
-        }
-        if(map.ip) yourIpEl.textContent = map.ip;
-        if(!yourLocEl.textContent || yourLocEl.textContent === "—" || yourLocEl.textContent === "Unavailable"){
-          yourLocEl.textContent = map.loc || "Unavailable";
-        }
-      }catch(e){
-        if(!serverTimeEl.textContent || serverTimeEl.textContent === "—") serverTimeEl.textContent = "Unavailable";
-      }
-    }
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
 
-    async function loadStatus(){
-      let haveWT = false;
-      try{
-        const t = await fetchJSON("https://worldtimeapi.org/api/ip");
-        const dt = new Date(t.datetime);
-        let base = dt.getTime();
-        const tick = () => {
-          serverTimeEl.textContent = new Date(base).toLocaleString(undefined, {
-            year:"numeric", month:"short", day:"2-digit",
-            hour:"2-digit", minute:"2-digit", second:"2-digit"
-          }) + ` (${t.timezone})`;
-          base += 1000;
-        };
-        tick(); setInterval(tick, 1000);
-        if(t.client_ip) yourIpEl.textContent = t.client_ip;
-        haveWT = true;
-      }catch(e){}
+    function escapeHtmlAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 
-      try{
-        const a = await fetchJSON("https://ipapi.co/json/");
-        if(a.ip) yourIpEl.textContent = a.ip;
-        const loc = [a.city, a.region, a.country_name].filter(Boolean).join(", ");
-        yourLocEl.textContent = loc || "—";
-      }catch(e){
-        try{
-          const b = await fetchJSON("https://ipwho.is/");
-          if(b.ip) yourIpEl.textContent = b.ip;
-          const loc = [b.city, b.region, b.country].filter(Boolean).join(", ");
-          yourLocEl.textContent = loc || "—";
-        }catch(e2){
-          try{
-            const c = await fetchJSON("https://api.ipify.org?format=json");
-            if(c.ip) yourIpEl.textContent = c.ip;
-          }catch(e3){}
-          if(!yourLocEl.textContent || yourLocEl.textContent === "—") yourLocEl.textContent = "Unavailable";
-        }
-      }
-
-      if(!haveWT){
-        await loadFromCFTrace();
-      }
-    }
-    loadStatus();
-
-    /* ===== Highlight helpers ===== */
     const ipV4Test = /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/i;
     const ipV6Test = /^(?:[A-Fa-f0-9]{1,4}:){1,7}[A-Fa-f0-9]{1,4}$/;
     const ipV4Match = /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
     const ipV6Match = /\b(?:[A-Fa-f0-9]{1,4}:){1,7}[A-Fa-f0-9]{1,4}\b/g;
     const hostMatch = /\b(?=.{1,253}\b)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\.(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))+\.?\b/gi;
 
-    function isIP(val){
-      const s = String(val||"").trim();
+    function isIP(val) {
+      const s = String(val || "").trim();
       return ipV4Test.test(s) || ipV6Test.test(s);
     }
 
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-    function escapeHtmlAttr(s){ return String(s).replace(/"/g,'&quot;'); }
-
-    function highlightInline(text){
-      let out = text.replace(ipV4Match, m=>`<span class="ip-accent mono">${m}</span>`);
-      out = out.replace(ipV6Match, m=>`<span class="ip-accent mono">${m}</span>`);
-      out = out.replace(hostMatch, m=>{
-        if(ipV4Test.test(m) || ipV6Test.test(m)) return m;
-        return `<span class="mono" style="color:var(--ok-bright);font-weight:800">${m}</span>`;
+    function highlightInline(text) {
+      let out = text.replace(ipV4Match, m => `<span class="ip mono">${m}</span>`);
+      out = out.replace(ipV6Match, m => `<span class="ip mono">${m}</span>`);
+      out = out.replace(hostMatch, m => {
+        if (ipV4Test.test(m) || ipV6Test.test(m)) return m;
+        return `<span class="host mono">${m}</span>`;
       });
       return out;
     }
 
-    function show(kind, text, el=msg){
+    function show(kind, text, el = msg) {
       el.innerHTML = highlightInline(String(text));
       el.className = "";
-      el.classList.add(kind==="ok"?"msg-ok":kind==="warn"?"msg-warn":"msg-err");
+      el.classList.add(kind === "ok" ? "msg-ok" : kind === "warn" ? "msg-warn" : "msg-err");
     }
 
-    function setPlaceholders(){
-      const t=typeEl.value;
-      prioRow.style.display=(t==="MX")?"grid":"none";
-      proxiedRow.style.display=(["A","AAAA","CNAME"].includes(t))?"grid":"none";
-      const placeholders={
-        "A":["IPv4 Address","e.g. 203.0.113.10"],
-        "AAAA":["IPv6 Address","e.g. 2001:db8::1"],
-        "CNAME":["Target Hostname","e.g. target.example.com"],
-        "TXT":["TXT Value",'e.g. v=spf1 include:_spf.example ~all'],
-        "MX":["Mail Server","e.g. mail.example.com"],
-        "NS":["Nameserver Host","e.g. ns1.example.com"],
-        "CAA":["CAA Value",'e.g. 0 issue "letsencrypt.org"'],
-        "HTTPS":["Value","HTTPS record value"]
-      };
-      const p=placeholders[t]; contentLabel.textContent=p[0]; contentEl.placeholder=p[1];
-    }
-    typeEl.addEventListener("change",setPlaceholders); setPlaceholders();
-
-    function normalizeHost(raw){
-      const v=(raw||"").trim().replace(/\s+/g,"");
-      if(!v)return"";
-      if(v===ROOT||v.endsWith("."+ROOT))return v.toLowerCase();
-      if(v.includes(".")) return v.toLowerCase();
-      return (v+"."+ROOT).toLowerCase();
-    }
-
-    document.getElementById("resetBtn").addEventListener("click",()=>{
-      document.getElementById("dnsForm").reset(); setPlaceholders();
-      msg.textContent=""; msg.className=""; hostEl.focus();
-    });
-
-    document.getElementById("dnsForm").addEventListener("submit", async (e)=>{
-      e.preventDefault();
-      const type=typeEl.value.trim().toUpperCase(),
-        name=normalizeHost(hostEl.value),
-        content=contentEl.value.trim(),
-        ttl=parseInt(ttlEl.value,10)||300,
-        proxied=!!proxiedEl.checked;
-
-      if(!name){show("err","❌ Host required");return;}
-      if(!(name===ROOT||name.endsWith("."+ROOT))){show("err",`❌ Host must be under ${ROOT}`);return;}
-      if(!content){show("err","❌ Content required");return;}
-
-      const payload={type,name,content,ttl};
-      if(type==="MX"){
-        const p=parseInt(priorityEl.value,10);
-        if(Number.isNaN(p)){show("err","❌ MX priority required");return;}
-        payload.priority=p;
-      }
-      if(["A","AAAA","CNAME"].includes(type)) payload.proxied=proxied;
-
-      show("warn","Processing…");
-      try{
-        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-        const data=await res.json();
-        if(data.success){
-          const r=data.record||data.result||{};
-          const c = (r.content||content);
-          const n = (r.name||name);
-          show("ok",`Done ✅ : ${c} → ${n} (${data.action||'create'})`);
-          await runSearch();
-        }else{
-          show("err","❌ Error: "+(data.error||"Unknown"));
+    /* ===== โหลดสถานะ ===== */
+    async function loadFromCFTrace() {
+      try {
+        const r = await fetch("https://1.1.1.1/cdn-cgi/trace", { cache: "no-store" });
+        const t = await r.text();
+        const map = Object.fromEntries(t.trim().split("\n").map(l => l.split("=")).map(([k, v]) => [k, v]));
+        if (map.ts) {
+          let ms = Number(map.ts) * 1000;
+          const tzStr = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
+          const tick = () => {
+            serverTimeEl.textContent = new Date(ms).toLocaleString(undefined, {
+              year: "numeric", month: "short", day: "2-digit",
+              hour: "2-digit", minute: "2-digit", second: "2-digit"
+            }) + ` (${tzStr})`;
+            ms += 1000;
+          };
+          tick();
+          setInterval(tick, 1000);
+        } else {
+          serverTimeEl.textContent = "ไม่พร้อมใช้งาน";
         }
-      }catch(err){ show("err","❌ Network error: "+err.message); }
+        if (map.ip) yourIpEl.textContent = map.ip;
+        if (!yourLocEl.textContent || yourLocEl.textContent === "—" || yourLocEl.textContent === "ไม่พร้อมใช้งาน") {
+          yourLocEl.textContent = map.loc || "ไม่พร้อมใช้งาน";
+        }
+      } catch (e) {
+        if (!serverTimeEl.textContent || serverTimeEl.textContent === "—") serverTimeEl.textContent = "ไม่พร้อมใช้งาน";
+      }
+    }
+
+    async function loadStatus() {
+      let haveWT = false;
+      try {
+        const t = await fetchJSON("https://worldtimeapi.org/api/ip");
+        const dt = new Date(t.datetime);
+        let base = dt.getTime();
+        const tick = () => {
+          serverTimeEl.textContent = new Date(base).toLocaleString(undefined, {
+            year: "numeric", month: "short", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit"
+          }) + ` (${t.timezone})`;
+          base += 1000;
+        };
+        tick();
+        setInterval(tick, 1000);
+        if (t.client_ip) yourIpEl.textContent = t.client_ip;
+        haveWT = true;
+      } catch (e) {}
+
+      try {
+        const a = await fetchJSON("https://ipapi.co/json/");
+        if (a.ip) yourIpEl.textContent = a.ip;
+        const loc = [a.city, a.region, a.country_name].filter(Boolean).join(", ");
+        yourLocEl.textContent = loc || "—";
+      } catch (e) {
+        try {
+          const b = await fetchJSON("https://ipwho.is/");
+          if (b.ip) yourIpEl.textContent = b.ip;
+          const loc = [b.city, b.region, b.country].filter(Boolean).join(", ");
+          yourLocEl.textContent = loc || "—";
+        } catch (e2) {
+          try {
+            const c = await fetchJSON("https://api.ipify.org?format=json");
+            if (c.ip) yourIpEl.textContent = c.ip;
+          } catch (e3) {}
+          if (!yourLocEl.textContent || yourLocEl.textContent === "—") yourLocEl.textContent = "ไม่พร้อมใช้งาน";
+        }
+      }
+      if (!haveWT) await loadFromCFTrace();
+    }
+    loadStatus();
+
+    /* ===== ฟอร์มหลัก ===== */
+    function setPlaceholders() {
+      const t = typeEl.value;
+      prioRow.style.display = (t === "MX") ? "grid" : "none";
+      proxiedRow.style.display = (["A", "AAAA", "CNAME"].includes(t)) ? "grid" : "none";
+      const placeholders = {
+        "A": ["ที่อยู่ IPv4", "เช่น 203.0.113.10"],
+        "AAAA": ["ที่อยู่ IPv6", "เช่น 2001:db8::1"],
+        "CNAME": ["โฮสต์เป้าหมาย", "เช่น target.example.com"],
+        "TXT": ["ค่า TXT", 'เช่น v=spf1 include:_spf.example ~all'],
+        "MX": ["เซิร์ฟเวอร์เมล", "เช่น mail.example.com"],
+        "NS": ["เนมเซิร์ฟเวอร์", "เช่น ns1.example.com"],
+        "CAA": ["ค่า CAA", 'เช่น 0 issue "letsencrypt.org"'],
+        "HTTPS": ["ค่า", "ค่า HTTPS record"]
+      };
+      const p = placeholders[t];
+      contentLabel.textContent = p[0];
+      contentEl.placeholder = p[1];
+    }
+    typeEl.addEventListener("change", setPlaceholders);
+    setPlaceholders();
+
+    function normalizeHost(raw) {
+      const v = (raw || "").trim().replace(/\s+/g, "");
+      if (!v) return "";
+      if (v === ROOT || v.endsWith("." + ROOT)) return v.toLowerCase();
+      if (v.includes(".")) return v.toLowerCase();
+      return (v + "." + ROOT).toLowerCase();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("dnsForm").reset();
+      setPlaceholders();
+      msg.textContent = "";
+      msg.className = "";
+      hostEl.focus();
     });
 
-    /* ===== Lookup (DoH) ===== */
-    const lookupHostEl=document.getElementById("lookupHost");
-    const lookupMsg=document.getElementById("lookupMsg");
-    document.getElementById("lookupReset").addEventListener("click", ()=>{ lookupHostEl.value=""; lookupMsg.textContent=""; lookupMsg.className=""; });
+    document.getElementById("dnsForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const type = typeEl.value.trim().toUpperCase(),
+        name = normalizeHost(hostEl.value),
+        content = contentEl.value.trim(),
+        ttl = parseInt(ttlEl.value, 10) || 300,
+        proxied = !!proxiedEl.checked;
+
+      if (!name) { show("err", "❌ ต้องระบุโฮสต์"); return; }
+      if (!(name === ROOT || name.endsWith("." + ROOT))) { show("err", `❌ โฮสต์ต้องอยู่ภายใต้ ${ROOT}`); return; }
+      if (!content) { show("err", "❌ ต้องระบุเนื้อหา"); return; }
+
+      const payload = { type, name, content, ttl };
+      if (type === "MX") {
+        const p = parseInt(priorityEl.value, 10);
+        if (Number.isNaN(p)) { show("err", "❌ ต้องระบุลำดับความสำคัญของ MX"); return; }
+        payload.priority = p;
+      }
+      if (["A", "AAAA", "CNAME"].includes(type)) payload.proxied = proxied;
+
+      show("warn", "⏳ กำลังดำเนินการ…");
+      try {
+        const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (data.success) {
+          const r = data.record || data.result || {};
+          const c = (r.content || content);
+          const n = (r.name || name);
+          show("ok", `✅ เสร็จสิ้น : ${c} → ${n} (${data.action || 'สร้าง'})`);
+          await runSearch();
+        } else {
+          show("err", "❌ ข้อผิดพลาด: " + (data.error || "ไม่ทราบสาเหตุ"));
+        }
+      } catch (err) { show("err", "❌ ข้อผิดพลาดเครือข่าย: " + err.message); }
+    });
+
+    /* ===== ค้นหา (Lookup) ===== */
+    const lookupHostEl = document.getElementById("lookupHost");
+    const lookupMsg = document.getElementById("lookupMsg");
+    document.getElementById("lookupReset").addEventListener("click", () => { lookupHostEl.value = "";
+      lookupMsg.textContent = "";
+      lookupMsg.className = ""; });
     document.getElementById("lookupBtn").addEventListener("click", lookup);
-    lookupHostEl.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); lookup(); }});
-    async function doh(name,type){
-      const url=`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`;
-      const res=await fetch(url,{headers:{accept:"application/dns-json"}});
-      if(!res.ok) throw new Error(`DoH ${type} failed (${res.status})`);
+    lookupHostEl.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault();
+        lookup(); } });
+
+    async function doh(name, type) {
+      const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`;
+      const res = await fetch(url, { headers: { accept: "application/dns-json" } });
+      if (!res.ok) throw new Error(`DoH ${type} ล้มเหลว (${res.status})`);
       return res.json();
     }
-    function formatAnswers(ans=[]){ return ans?.filter(a=>a?.data).map(a=>a.data)||[]; }
-    async function lookup(){
-      const name=normalizeHost(lookupHostEl.value);
-      if(!name){show("err","❌ Host required",lookupMsg);return;}
-      show("warn","Looking up…",lookupMsg);
-      try{
-        const [a4,a6]=await Promise.allSettled([doh(name,"A"),doh(name,"AAAA")]);
-        const v4=(a4.status==="fulfilled")?formatAnswers(a4.value?.Answer):[];
-        const v6=(a6.status==="fulfilled")?formatAnswers(a6.value?.Answer):[];
-        if(v4.length===0 && v6.length===0){ show("err",`No A/AAAA answers for ${name}`,lookupMsg); return; }
-        const chunks=[];
-        if(v4.length) chunks.push(`A (${v4.length}) → ${v4.map(ip=>`<span class="cell-content ip mono">${ip}</span>`).join(", ")}`);
-        if(v6.length) chunks.push(`AAAA (${v6.length}) → ${v6.map(ip=>`<span class="cell-content ip mono">${ip}</span>`).join(", ")}`);
-        lookupMsg.className="msg-ok";
-        lookupMsg.innerHTML = `<span class="cell-content host mono">${name}</span>\n${chunks.join("\n")}`;
-      }catch(err){ show("err","❌ Lookup error: "+err.message,lookupMsg); }
+
+    function formatAnswers(ans = []) { return ans?.filter(a => a?.data).map(a => a.data) || []; }
+
+    async function lookup() {
+      const name = normalizeHost(lookupHostEl.value);
+      if (!name) { show("err", "❌ ต้องระบุโฮสต์", lookupMsg); return; }
+      show("warn", "⏳ กำลังค้นหา…", lookupMsg);
+      try {
+        const [a4, a6] = await Promise.allSettled([doh(name, "A"), doh(name, "AAAA")]);
+        const v4 = (a4.status === "fulfilled") ? formatAnswers(a4.value?.Answer) : [];
+        const v6 = (a6.status === "fulfilled") ? formatAnswers(a6.value?.Answer) : [];
+        if (v4.length === 0 && v6.length === 0) { show("err", `❌ ไม่พบคำตอบ A/AAAA สำหรับ ${name}`, lookupMsg); return; }
+        const chunks = [];
+        if (v4.length) chunks.push(`A (${v4.length}) → ${v4.map(ip => `<span class="ip mono">${ip}</span>`).join(", ")}`);
+        if (v6.length) chunks.push(`AAAA (${v6.length}) → ${v6.map(ip => `<span class="ip mono">${ip}</span>`).join(", ")}`);
+        lookupMsg.className = "msg-ok";
+        lookupMsg.innerHTML = `<span class="host mono">${name}</span>\n${chunks.join("\n")}`;
+      } catch (err) { show("err", "❌ ข้อผิดพลาดในการค้นหา: " + err.message, lookupMsg); }
     }
 
-    /* ===== Cloudflare Search / Manage ===== */
-    const cfName=document.getElementById("cfName");
-    const cfType=document.getElementById("cfType");
-    const cfBody=document.getElementById("cfBody");
-    const searchMsg=document.getElementById("searchMsg");
-    document.getElementById("cfClear").addEventListener("click",()=>{ cfName.value=""; cfType.value=""; page=1; runSearch(); });
-    document.getElementById("cfSearch").addEventListener("click",()=>{ page=1; runSearch(); });
-    document.getElementById("prevPage").addEventListener("click", ()=>{ if(page>1){ page--; runSearch(); }});
-    document.getElementById("nextPage").addEventListener("click", ()=>{ page++; runSearch(); });
+    /* ===== จัดการ Cloudflare ===== */
+    const cfName = document.getElementById("cfName");
+    const cfType = document.getElementById("cfType");
+    const cfBody = document.getElementById("cfBody");
+    const searchMsg = document.getElementById("searchMsg");
+    document.getElementById("cfClear").addEventListener("click", () => { cfName.value = "";
+      cfType.value = "";
+      page = 1;
+      runSearch(); });
+    document.getElementById("cfSearch").addEventListener("click", () => { page = 1;
+      runSearch(); });
+    document.getElementById("prevPage").addEventListener("click", () => { if (page > 1) { page--;
+        runSearch(); } });
+    document.getElementById("nextPage").addEventListener("click", () => { page++;
+      runSearch(); });
 
-    let page=1;
-    function classifyContent(val){
-      return isIP(val) ? 'ip' : 'host';
-    }
-    async function runSearch(){
-      const params=new URLSearchParams();
-      if(cfName.value.trim()) params.set("name", cfName.value.trim());
-      if(cfType.value) params.set("type", cfType.value);
+    let page = 1;
+
+    function classifyContent(val) { return isIP(val) ? 'ip' : 'host'; }
+
+    async function runSearch() {
+      const params = new URLSearchParams();
+      if (cfName.value.trim()) params.set("name", cfName.value.trim());
+      if (cfType.value) params.set("type", cfType.value);
       params.set("page", String(page));
-      params.set("per_page","50");
-      searchMsg.textContent="Searching…"; searchMsg.className="msg-warn";
+      params.set("per_page", "50");
+      searchMsg.textContent = "⏳ กำลังค้นหา…";
+      searchMsg.className = "msg-warn";
 
-      try{
-        const res=await fetch(`${API_URL}?${params.toString()}`,{method:"GET"});
-        const data=await res.json();
-        if(!data.success){ throw new Error(data.error||"Search failed"); }
-        const rows=data.result||[];
-        cfBody.innerHTML="";
-        if(rows.length===0){
-          cfBody.innerHTML=`<tr><td colspan="6" class="small">No records found on this page.</td></tr>`;
-        }else{
-          for(const r of rows){
-            const tr=document.createElement("tr");
-            const contentClass = classifyContent(r.content||"");
-            const contentHTML = contentClass==='ip'
-              ? `<span class="cell-content ip mono">${escapeHtml(r.content||"")}</span>`
-              : `<span class="cell-content host mono">${escapeHtml(r.content||"")}</span>`;
+      try {
+        const res = await fetch(`${API_URL}?${params.toString()}`, { method: "GET" });
+        const data = await res.json();
+        if (!data.success) { throw new Error(data.error || "ค้นหาล้มเหลว"); }
+        const rows = data.result || [];
+        cfBody.innerHTML = "";
+        if (rows.length === 0) {
+          cfBody.innerHTML = `<tr><td colspan="6" class="small">📭 ไม่พบระเบียนในหน้านี้</td></tr>`;
+        } else {
+          for (const r of rows) {
+            const tr = document.createElement("tr");
+            const contentClass = classifyContent(r.content || "");
+            const contentHTML = contentClass === 'ip' ?
+              `<span class="ip mono">${escapeHtml(r.content || "")}</span>` :
+              `<span class="host mono">${escapeHtml(r.content || "")}</span>`;
             tr.innerHTML = `
-              <td class="cell-type"><span class="mono">${r.type||""}</span></td>
-              <td class="cell-name mono">${escapeHtml(r.name||"")}</td>
+              <td class="cell-type"><span class="mono">${r.type || ""}</span></td>
+              <td class="cell-name mono">${escapeHtml(r.name || "")}</td>
               <td class="cell-content-wrap">${contentHTML}</td>
-              <td class="cell-ttl">${r.ttl||""}</td>
-              <td class="cell-prox">${(["A","AAAA","CNAME"].includes(r.type) && r.proxied)? "🟩 proxied":"⬜ DNS only"}</td>
+              <td class="cell-ttl">${r.ttl || ""}</td>
+              <td class="cell-prox">${(["A","AAAA","CNAME"].includes(r.type) && r.proxied) ? "🟩 พรอกซี" : "⬜ DNS เท่านั้น"}</td>
               <td class="cell-act">
                 <div class="row-actions">
-                  <button class="btn-mini" data-act="edit" data-id="${r.id}">Edit</button>
-                  <button class="btn-mini" data-act="load" data-id="${r.id}">Load</button>
-                  <button class="btn-mini ghost" data-act="delete" data-id="${r.id}">Delete</button>
+                  <button class="btn-mini" data-act="edit" data-id="${r.id}">✏️ แก้ไข</button>
+                  <button class="btn-mini" data-act="load" data-id="${r.id}">📥 โหลด</button>
+                  <button class="btn-mini ghost" data-act="delete" data-id="${r.id}">🗑️ ลบ</button>
                 </div>
               </td>`;
             tr.dataset.row = JSON.stringify(r);
             cfBody.appendChild(tr);
           }
         }
-        searchMsg.textContent=`Page ${data.page||page} – ${rows.length} record(s)`; searchMsg.className="small";
-      }catch(err){
-        searchMsg.textContent="❌ "+err.message;
-        searchMsg.className="msg-err";
+        searchMsg.textContent = `📄 หน้า ${data.page || page} – ${rows.length} รายการ`;
+        searchMsg.className = "small";
+      } catch (err) {
+        searchMsg.textContent = "❌ " + err.message;
+        searchMsg.className = "msg-err";
       }
     }
     runSearch();
 
-    function typeSelectHTML(cur){
-      const types=["A","AAAA","CNAME","TXT","MX","NS","CAA","HTTPS"];
+    /* ===== ฟังก์ชันแก้ไขในตาราง ===== */
+    function typeSelectHTML(cur) {
+      const types = ["A", "AAAA", "CNAME", "TXT", "MX", "NS", "CAA", "HTTPS"];
       return `<select class="sel edit-type">
-        ${types.map(t=>`<option value="${t}" ${t===cur?'selected':''}>${t}</option>`).join("")}
+        ${types.map(t => `<option value="${t}" ${t===cur?'selected':''}>${t}</option>`).join("")}
       </select>`;
     }
-    function proxToggleHTML(checked){
+
+    function proxToggleHTML(checked) {
       return `<label class="switch switch-mini">
         <input class="edit-prox" type="checkbox" ${checked?'checked':''} />
         <span class="slider"></span>
       </label>`;
     }
-    function startEdit(tr, row){
-      if(tr.dataset.editing==="1") return;
-      tr.dataset.editing="1";
 
-      tr.querySelector(".cell-type").innerHTML = typeSelectHTML(row.type||"A");
-      tr.querySelector(".cell-name").innerHTML = `<input class="inpt edit-name" value="${escapeHtmlAttr(row.name||"")}" />`;
-      tr.querySelector(".cell-content-wrap").innerHTML = `<input class="inpt edit-content" value="${escapeHtmlAttr(row.content||"")}" />`;
-      tr.querySelector(".cell-ttl").innerHTML = `<input class="inpt edit-ttl" type="number" min="1" value="${row.ttl||300}" />`;
+    function startEdit(tr, row) {
+      if (tr.dataset.editing === "1") return;
+      tr.dataset.editing = "1";
+
+      tr.querySelector(".cell-type").innerHTML = typeSelectHTML(row.type || "A");
+      tr.querySelector(".cell-name").innerHTML = `<input class="inpt edit-name" value="${escapeHtmlAttr(row.name || "")}" />`;
+      tr.querySelector(".cell-content-wrap").innerHTML = `<input class="inpt edit-content" value="${escapeHtmlAttr(row.content || "")}" />`;
+      tr.querySelector(".cell-ttl").innerHTML = `<input class="inpt edit-ttl" type="number" min="1" value="${row.ttl || 300}" />`;
 
       const proxCell = tr.querySelector(".cell-prox");
-      if(["A","AAAA","CNAME"].includes(row.type||"")){
+      if (["A", "AAAA", "CNAME"].includes(row.type || "")) {
         proxCell.innerHTML = proxToggleHTML(!!row.proxied);
-      }else{
+      } else {
         proxCell.innerHTML = `<span class="small muted">—</span>`;
       }
 
       const actCell = tr.querySelector(".cell-act .row-actions");
       actCell.innerHTML = `
-        <button class="btn-mini" data-act="save" data-id="${row.id}">Save</button>
-        <button class="btn-mini ghost" data-act="cancel" data-id="${row.id}">Cancel</button>
-      `;
-    }
-    function cancelEdit(tr, row){
-      tr.dataset.editing="0";
-      tr.querySelector(".cell-type").innerHTML = `<span class="mono">${row.type||""}</span>`;
-      tr.querySelector(".cell-name").innerHTML = `${escapeHtml(row.name||"")}`;
-      const cls = isIP(row.content||"") ? 'ip' : 'host';
-      tr.querySelector(".cell-content-wrap").innerHTML =
-        cls==='ip'
-          ? `<span class="cell-content ip mono">${escapeHtml(row.content||"")}</span>`
-          : `<span class="cell-content host mono">${escapeHtml(row.content||"")}</span>`;
-      tr.querySelector(".cell-ttl").innerHTML = `${row.ttl||""}`;
-      tr.querySelector(".cell-prox").innerHTML =
-        (["A","AAAA","CNAME"].includes(row.type) && row.proxied) ? "🟩 proxied" : "⬜ DNS only";
-      const actCell = tr.querySelector(".cell-act .row-actions");
-      actCell.innerHTML = `
-        <button class="btn-mini" data-act="edit" data-id="${row.id}">Edit</button>
-        <button class="btn-mini" data-act="load" data-id="${row.id}">Load</button>
-        <button class="btn-mini ghost" data-act="delete" data-id="${row.id}">Delete</button>
+        <button class="btn-mini" data-act="save" data-id="${row.id}">💾 บันทึก</button>
+        <button class="btn-mini ghost" data-act="cancel" data-id="${row.id}">❌ ยกเลิก</button>
       `;
     }
 
-    async function saveEdit(tr, row){
+    function cancelEdit(tr, row) {
+      tr.dataset.editing = "0";
+      tr.querySelector(".cell-type").innerHTML = `<span class="mono">${row.type || ""}</span>`;
+      tr.querySelector(".cell-name").innerHTML = `${escapeHtml(row.name || "")}`;
+      const cls = isIP(row.content || "") ? 'ip' : 'host';
+      tr.querySelector(".cell-content-wrap").innerHTML =
+        cls === 'ip' ?
+        `<span class="ip mono">${escapeHtml(row.content || "")}</span>` :
+        `<span class="host mono">${escapeHtml(row.content || "")}</span>`;
+      tr.querySelector(".cell-ttl").innerHTML = `${row.ttl || ""}`;
+      tr.querySelector(".cell-prox").innerHTML =
+        (["A", "AAAA", "CNAME"].includes(row.type) && row.proxied) ? "🟩 พรอกซี" : "⬜ DNS เท่านั้น";
+      const actCell = tr.querySelector(".cell-act .row-actions");
+      actCell.innerHTML = `
+        <button class="btn-mini" data-act="edit" data-id="${row.id}">✏️ แก้ไข</button>
+        <button class="btn-mini" data-act="load" data-id="${row.id}">📥 โหลด</button>
+        <button class="btn-mini ghost" data-act="delete" data-id="${row.id}">🗑️ ลบ</button>
+      `;
+    }
+
+    async function saveEdit(tr, row) {
       const t = tr.querySelector(".edit-type").value;
       const nameRaw = tr.querySelector(".edit-name").value;
       const content = tr.querySelector(".edit-content").value.trim();
-      const ttl = parseInt(tr.querySelector(".edit-ttl").value,10) || row.ttl || 300;
+      const ttl = parseInt(tr.querySelector(".edit-ttl").value, 10) || row.ttl || 300;
       const name = normalizeHost(nameRaw);
 
-      if(!name){searchMsg.textContent="❌ Host required"; searchMsg.className="msg-err"; return;}
-      if(!content){searchMsg.textContent="❌ Content required"; searchMsg.className="msg-err"; return;}
+      if (!name) { searchMsg.textContent = "❌ ต้องระบุโฮสต์";
+        searchMsg.className = "msg-err"; return; }
+      if (!content) { searchMsg.textContent = "❌ ต้องระบุเนื้อหา";
+        searchMsg.className = "msg-err"; return; }
 
-      const payload = { type:t, name, content, ttl };
-      if(t==="MX"){ payload.priority = (row.priority!=null) ? row.priority : 10; }
-      if(["A","AAAA","CNAME"].includes(t)){
+      const payload = { type: t, name, content, ttl };
+      if (t === "MX") { payload.priority = (row.priority != null) ? row.priority : 10; }
+      if (["A", "AAAA", "CNAME"].includes(t)) {
         const prox = tr.querySelector(".edit-prox");
         payload.proxied = prox ? !!prox.checked : false;
       }
 
-      searchMsg.textContent="Saving…"; searchMsg.className="msg-warn";
-      try{
-        const res=await fetch(`${API_URL}/${row.id}`,{
-          method:"PUT", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(payload)
+      searchMsg.textContent = "⏳ กำลังบันทึก…";
+      searchMsg.className = "msg-warn";
+      try {
+        const res = await fetch(`${API_URL}/${row.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-        const data=await res.json();
-        if(!data.success) throw new Error(data.error||"Update failed");
-        searchMsg.textContent="Updated ✅"; searchMsg.className="msg-ok";
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || "อัปเดตล้มเหลว");
+        searchMsg.textContent = "✅ อัปเดตสำเร็จ";
+        searchMsg.className = "msg-ok";
         await runSearch();
-      }catch(err){
-        searchMsg.textContent="❌ "+err.message; searchMsg.className="msg-err";
+      } catch (err) {
+        searchMsg.textContent = "❌ " + err.message;
+        searchMsg.className = "msg-err";
       }
     }
 
-    document.getElementById("cfBody").addEventListener("click", async (e)=>{
-      const btn=e.target.closest("button"); if(!btn) return;
-      const act=btn.getAttribute("data-act");
-      const tr=btn.closest("tr");
-      const row=JSON.parse(tr.dataset.row||"{}");
+    /* ===== Event Delegation สำหรับตาราง ===== */
+    document.getElementById("cfBody").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const act = btn.getAttribute("data-act");
+      const tr = btn.closest("tr");
+      const row = JSON.parse(tr.dataset.row || "{}");
 
-      if(act==="load"){
-        typeEl.value=row.type||"A"; setPlaceholders();
-        hostEl.value=row.name||"";
-        contentEl.value=row.content||"";
-        ttlEl.value=String(row.ttl||300);
-        if(["A","AAAA","CNAME"].includes(row.type||"")) proxiedEl.checked=!!row.proxied;
-        if(row.type==="MX" && row.priority!=null){ priorityEl.value = row.priority; }
-        show("ok","Loaded into form. Edit and click “Add / Update”.");
-        window.scrollTo({top:0,behavior:"smooth"});
+      if (act === "load") {
+        typeEl.value = row.type || "A";
+        setPlaceholders();
+        hostEl.value = row.name || "";
+        contentEl.value = row.content || "";
+        ttlEl.value = String(row.ttl || 300);
+        if (["A", "AAAA", "CNAME"].includes(row.type || "")) proxiedEl.checked = !!row.proxied;
+        if (row.type === "MX" && row.priority != null) { priorityEl.value = row.priority; }
+        show("ok", "📥 โหลดลงฟอร์มแล้ว แก้ไขแล้วคลิก “เพิ่ม / อัปเดต”");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      if(act==="edit"){ startEdit(tr, row); }
-      if(act==="cancel"){ cancelEdit(tr, row); }
-      if(act==="save"){ await saveEdit(tr, row); }
+      if (act === "edit") { startEdit(tr, row); }
+      if (act === "cancel") { cancelEdit(tr, row); }
+      if (act === "save") { await saveEdit(tr, row); }
 
-      if(act==="delete"){
-        if(!confirm(`Delete DNS record?\n${row.type} ${row.name} -> ${row.content}`)) return;
-        searchMsg.textContent="Deleting…"; searchMsg.className="msg-warn";
-        try{
-          const res=await fetch(`${API_URL}/${row.id}`,{method:"DELETE"});
-          const data=await res.json();
-          if(!data.success) throw new Error(data.error||"Delete failed");
-          searchMsg.textContent="Deleted ✅"; searchMsg.className="msg-ok";
+      if (act === "delete") {
+        if (!confirm(`❗ ลบระเบียน DNS นี้?\n${row.type} ${row.name} -> ${row.content}`)) return;
+        searchMsg.textContent = "⏳ กำลังลบ…";
+        searchMsg.className = "msg-warn";
+        try {
+          const res = await fetch(`${API_URL}/${row.id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.error || "ลบล้มเหลว");
+          searchMsg.textContent = "✅ ลบสำเร็จ";
+          searchMsg.className = "msg-ok";
           await runSearch();
-        }catch(err){ searchMsg.textContent="❌ "+err.message; searchMsg.className="msg-err"; }
+        } catch (err) {
+          searchMsg.textContent = "❌ " + err.message;
+          searchMsg.className = "msg-err";
+        }
       }
     });
   </script>
