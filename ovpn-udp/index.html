@@ -1,3 +1,5 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
 <style>
@@ -11,47 +13,46 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Fix: changed from center to flex-start to align from top to bottom, preventing overflow */
+  align-items: flex-start; 
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  padding: 30px 20px; /* Add top/bottom padding for extra safety */
+  padding: 20px 14px; 
   margin: 0;
 }
 .container {
   max-width: 900px;
   width: 100%;
   background: transparent;
-  padding: 0 5px;
   display: flex;       
   flex-direction: column;
 }
 
-/* ----- NOTICE BOX (Fixed mobile covering header issue) ----- */
+/* ----- NOTICE BOX (กล่องภาษาพม่าแสดงผลสมบูรณ์ 100%) ----- */
 .notice-box {
   background: #fff3cd;
   border-left: 16px solid #d32f2f;
   border-radius: 24px;
-  padding: 30px 40px;
-  margin-top: 15px;    /* Fix: added top spacing to push box below browser app bar */
-  margin-bottom: 30px;
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
+  padding: 24px 28px;
+  margin-top: 10px;    
+  margin-bottom: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 20px;
   height: auto;        
   overflow: visible;   
 }
 .notice-box i {
-  font-size: 50px;     
+  font-size: 48px;     
   color: #d32f2f;
   flex-shrink: 0;
 }
 .notice-box p {
-  font-size: 22px;     
+  font-size: 20px;     
   font-weight: 700;
   color: #1e293b;
   font-family: 'Pyidaungsu', 'Padauk', 'Noto Sans Myanmar', sans-serif; 
-  line-height: 1.6;    
+  line-height: 1.7;    
   margin: 0;
   letter-spacing: 0.5px;
   word-break: break-word;
@@ -240,42 +241,40 @@ textarea::selection {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
-/* ----- Responsive (Compressed for mobile screens) ----- */
-@media (max-width: 700px) {
+/* ----- Responsive (แสดงผลบนแอปมือถือเต็มรูปแบบ) ----- */
+@media (max-width: 768px) {
   body {
-    padding: 20px 10px; /* Reduce top margin for short phone screens */
-  }
-  .container {
-    padding: 0;
+    padding: 16px 8px;
   }
   .notice-box {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 20px 16px;
-    gap: 10px;
+    gap: 12px;
     border-left: none;
-    border-top: 8px solid #d32f2f; /* Move red bar to top for added dimension */
-    margin-top: 5px; /* Reduce distance to fit properly */
+    border-top: 10px solid #d32f2f; /* ย้ายแถบแดงมาด้านบนให้สวยงามบนมือถือ */
+    margin-top: 8px;
     margin-bottom: 20px;
   }
   .notice-box i {
-    font-size: 38px;
+    font-size: 40px;
   }
   .notice-box p {
-    font-size: 16px; /* Further reduce Burmese text size to ensure all words are clearly visible */
-    line-height: 1.5;
+    font-size: 16px; 
+    line-height: 1.6;
   }
   .box {
     padding: 16px 16px 18px;
+    border-radius: 16px;
   }
   textarea {
     font-size: 13px;
-    min-height: 68px;
+    min-height: 74px;
     padding: 12px 14px;
   }
   .btn-copy {
-    padding: 8px 18px;
+    padding: 10px 18px;
     font-size: 13px;
     width: 100%;
     justify-content: center;
@@ -283,6 +282,7 @@ textarea::selection {
   .action-row {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
   .status {
     justify-content: center;
@@ -300,21 +300,14 @@ textarea::selection {
     padding: 18px 12px;
   }
   .notice-box p {
-    font-size: 14px; /* For extra small narrow-screen phones */
+    font-size: 14px; 
     line-height: 1.5;
   }
   .notice-box i {
-    font-size: 32px;
+    font-size: 34px;
   }
   .box {
     padding: 12px 12px 16px;
-  }
-  .label-row label {
-    font-size: 13px;
-  }
-  .label-row .tag {
-    font-size: 10px;
-    padding: 1px 10px;
   }
 }
 
