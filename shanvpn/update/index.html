@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub File Uploader (Simple & Fast)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="file"] {
+            background-color: #fafafa;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #24292e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #e2e3e5; color: #383d41; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>GitHub File Uploader</h2>
+    
+    <div class="form-group">
+        <label>GitHub Token</label>
+        <input type="password" id="token" placeholder="GitHub Token">
+    </div>
+
+    <div class="form-group">
+        <label>Repository</label>
+        <input type="text" id="repo" placeholder="Repository">
+    </div>
+
+    <div class="form-group">
+        <label>Path</label>
+        <input type="text" id="path" placeholder="Path">
+    </div>
+
+    <div class="form-group" style="border: 2px dashed #bbb; padding: 15px; border-radius: 6px; background: #fdfdfd; margin-bottom: 25px;">
+        <label style="color: #0056b3;">📁 เลือกไฟล์จากตัวเครื่องของคุณ</label>
+        <input type="file" id="fileInput" onchange="processFile()">
+    </div>
+
+    <button onclick="uploadToGitHub()">อัปโหลดไฟล์ขึ้น GitHub</button>
+
+    <div id="status"></div>
+</div>
+
+<script>
+// ตัวแปรสำหรับเก็บเนื้อหาไฟล์ในระบบเบื้องหลัง
+let fileContentInMemory = "";
+
+// ฟังก์ชันอ่านไฟล์เมื่อมีการเลือกไฟล์จากเครื่อง
+function processFile() {
+    const fileInput = document.getElementById('fileInput');
+    const pathInput = document.getElementById('path');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // เก็บเนื้อหาไฟล์ไว้ในตัวแปร ไม่ต้องแสดงบนหน้าจอ
+            fileContentInMemory = e.target.result;
+            
+            // ถ้าช่อง Path ว่างอยู่ จะใส่ค่าเริ่มต้นให้ตามชื่อไฟล์อัตโนมัติ
+            if (!pathInput.value.trim()) {
+                pathInput.value = `khamvpn/${file.name}`;
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+async function uploadToGitHub() {
+    const token = document.getElementById('token').value.trim();
+    const repo = document.getElementById('repo').value.trim();
+    const path = document.getElementById('path').value.trim();
+
+    if (!token || !repo || !path || !fileContentInMemory) {
+        showStatus('กรุณากรอกข้อมูลให้ครบ และกดเลือกไฟล์ที่ต้องการอัปโหลดก่อนครับ', 'error');
+        return;
+    }
+
+    showStatus('กำลังอัปโหลด...', 'info');
+
+    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    
+    // แปลงเนื้อหาไฟล์เป็น Base64
+    const base64Content = btoa(unescape(encodeURIComponent(fileContentInMemory)));
+
+    let sha = null;
+
+    // ขั้นตอนที่ 1: ตรวจสอบเพื่อดึงรหัส SHA เดิม (ถ้ามีไฟล์อยู่แล้วจะเขียนทับ)
+    try {
+        const checkResponse = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        if (checkResponse.ok) {
+            const fileData = await checkResponse.json();
+            sha = fileData.sha;
+        }
+    } catch (err) {
+        // ไม่มีไฟล์เดิมอยู่ก่อน
+    }
+
+    // ขั้นตอนที่ 2: ส่งข้อมูลไปบันทึกบน GitHub
+    const bodyData = {
+        message: `Uploaded file via Web Utility at ${new Date().toLocaleString('th-TH')}`,
+        content: base64Content
+    };
+
+    if (sha) {
+        bodyData.sha = sha;
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify(bodyData)
+        });
+
+        if (response.ok) {
+            showStatus('🎉 อัปโหลดและเขียนทับไฟล์บน GitHub สำเร็จแล้ว!', 'success');
+        } else {
+            const errorData = await response.json();
+            showStatus(`เกิดข้อผิดพลาดจาก GitHub: ${errorData.message}`, 'error');
+        }
+    } catch (error) {
+        showStatus(`เชื่อมต่อล้มเหลว: ${error.message}`, 'error');
+    }
+}
+
+function showStatus(text, type) {
+    const statusDiv = document.getElementById('status');
+    statusDiv.innerText = text;
+    statusDiv.style.display = 'block';
+    statusDiv.className = type;
+}
+</script>
+
+</body>
+</html>
