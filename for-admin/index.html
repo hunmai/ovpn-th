@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบคัดลอกข้อความ (7 ช่อง)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px 10px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .box-item {
+            background-color: #fafbfc;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .box-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #586069;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* ปรับปรุง CSS ส่วนนี้เพื่อให้แสดงผลได้เต็มร้อยบนหน้าจอมือถือทุกรุ่น */
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #fff;
+            color: #333;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+            
+            /* บังคับตัดคำและแสดงผลข้อความยาวๆ อย่างถูกต้อง */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+        }
+
+        .btn-copy {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        .btn-copy:hover {
+            background-color: #0056b3;
+        }
+
+        /* แจ้งเตือนเมื่อ Copy สำเร็จ */
+        .toast {
+            display: none;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ศูนย์รวมสคริปต์และข้อความ</h2>
+    
+    <div class="box-item">
+        <div class="box-title">Run Ovpn</div>
+        <div class="input-group">
+            <textarea id="textToCopy1" readonly>apt update -y && apt upgrade -y && wget https://hunmai.github.io/ovpn-th/Plus && chmod 777 Plus && ./Plus</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy1')">Copy</button>
+        </div>
+    </div>
+    
+    <div class="box-item">
+        <div class="box-title">Run Udp</div>
+        <div class="input-group">
+            <textarea id="textToCopy7" readonly>apt-get remove command-not-found -y && wget https://hunmai.github.io/ovpn-th/Udp/install_shanvpn.sh && chmod +x install_shanvpn.sh; ./install_shanvpn.sh</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy7')">Copy</button>
+        </div>
+    </div>
+
+    <div class="box-item">
+        <div class="box-title">Run Slowdns</div>
+        <div class="input-group">
+            <textarea id="textToCopy2" readonly>wget https://hunmai.github.io/ovpn-th/Ovpn/slowdns.sh chmod +x slowdns.sh ./slowdns.sh</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy2')">Copy</button>
+        </div>
+    </div>
+
+    <div class="box-item">
+        <div class="box-title">Fix Ovpn</div>
+        <div class="input-group">
+            <textarea id="textToCopy3" readonly>curl -o fix.sh https://ovpn-th.netlify.app/Ovpn/fix.sh chmod +x fix.sh ./fix.sh</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy3')">Copy</button>
+        </div>
+    </div>
+
+    <div class="box-item">
+        <div class="box-title">Prot Online</div>
+        <div class="input-group">
+            <textarea id="textToCopy4" readonly>sudo nano /etc/apache2/ports.conf</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy4')">Copy</button>
+        </div>
+    </div>
+
+    <div class="box-item">
+        <div class="box-title">Reboot</div>
+        <div class="input-group">
+            <textarea id="textToCopy5" readonly>echo "30 3 * * * root /sbin/reboot" > /etc/cron.d/reboot service cron restart</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy5')">Copy</button>
+        </div>
+    </div>
+
+    <div class="box-item">
+        <div class="box-title">ssl port</div>
+        <div class="input-group">
+            <textarea id="textToCopy6" readonly>nano /etc/stunnel/stunnel.conf</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy6')">Copy</button>
+        </div>
+    </div>
+    
+    <div class="box-item">
+        <div class="box-title">Online User</div>
+        <div class="input-group">
+            <textarea id="textToCopy7" readonly>nano /usr/bin/onlineapp</textarea>
+            <button class="btn-copy" onclick="copyText('textToCopy7')">Copy</button>
+        </div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast">คัดลอกข้อความเรียบร้อยแล้ว!</div>
+
+<script>
+    let toastTimeout;
+
+    function copyText(elementId) {
+        const copyText = document.getElementById(elementId);
+
+        // ไฮไลท์ข้อความ
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+
+        // คัดลอกลงคลิปบอร์ด
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const toast = document.getElementById("toast");
+            toast.style.display = "block";
+            
+            clearTimeout(toastTimeout);
+            
+            toastTimeout = setTimeout(() => {
+                toast.style.display = "none";
+            }, 2000);
+        }).catch(err => {
+            console.error('ไม่สามารถคัดลอกได้: ', err);
+        });
+    }
+</script>
+
+</body>
+</html>
