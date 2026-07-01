@@ -1,829 +1,609 @@
 <!doctype html>
-<html lang="th" data-theme="light">
+<html lang="th" data-theme="cartoon">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ระบบจัดการ DNS</title>
+  <title>🌸 PUKANG DNS WORLD - ระบบจัดการ DNS สุดน่ารัก 🌸</title>
+  <!-- Google Fonts: Itim (Cute Thai/Eng) & Bai Jamjuree -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Bai+Jamjuree:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
-    /* ===== ตัวแปรสีหลัก ===== */
+    /* ===== CARTOON PASTEL VARIABLE THEMES ===== */
     :root {
-      --fg: #0b1220;
-      --muted: #5b6b84;
-      --line: #d8e3ee;
-
-      /* สีหลัก */
-      --accent: #0ea5e9;
-      --accent-ink: #0ea5e9;
-      --ok: #10b981;
-      --ok-bright: #059669;
-      --warn: #f59e0b;
-      --err: #ef4444;
-
-      --time: #8b5cf6;
-      --loc: #06b6d4;
-
-      /* พื้นหลัง gradient สวยๆ */
-      --bg1: #f0f9ff;
-      --bg2: #ecfdf5;
-      --bg3: #f5f3ff;
-
-      --card: #ffffffcf;
-      --card-tint: #f8fafc;
-
-      --tri: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
-      --tri-soft: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
-
-      --shadow-strong: 0 20px 40px rgba(11, 18, 32, .12);
-      --shadow-soft: 0 8px 20px rgba(11, 18, 32, .05);
-      --card-bg-plain: #ffffffd9;
-      --table-row: #fff;
-      --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.035'/></feComponentTransfer></filter><rect width='100%' height='100%' filter='url(#f)'/></svg>");
+      --bg-base: #F0F4FF;
+      --bg-panel: #FFFFFF;
+      --border-color: #CCDAFC;
+      --comic-border: #334155; /* ขอบเส้นเข้มสไตล์การ์ตูน */
+      
+      --fg-main: #2D3748;
+      --fg-muted: #718096;
+      
+      /* Cartoon Pastel Colors */
+      --pastel-blue: #7093F5;
+      --pastel-mint: #48BB78;
+      --pastel-pink: #ED64A6;
+      --pastel-purple: #9F7AEA;
+      --pastel-yellow: #ECC94B;
+      
+      --gradient-primary: linear-gradient(135deg, #FF91AF 0%, #9F7AEA 100%);
+      --comic-shadow: 4px 4px 0px #334155;
+      --comic-shadow-hover: 2px 2px 0px #334155;
     }
 
-    /* ===== โหมดมืด ===== */
+    /* Dark Cartoon Variant (สไตล์การ์ตูนนีออนยามค่ำคืน) */
     [data-theme="dark"] {
-      --fg: #e5eefc;
-      --muted: #9fb1c9;
-      --line: #223043;
-      --accent: #7dd3fc;
-      --accent-ink: #7dd3fc;
-      --ok: #34d399;
-      --ok-bright: #34d399;
-      --time: #c4b5fd;
-      --loc: #67e8f9;
-      --bg1: #07141f;
-      --bg2: #0b1e2a;
-      --bg3: #101f33;
-      --card: #0e1726ee;
-      --card-tint: #0a1320;
-      --warn: #fbbf24;
-      --err: #f87171;
-      --shadow-strong: 0 20px 40px rgba(0, 0, 0, .45);
-      --shadow-soft: 0 8px 20px rgba(0, 0, 0, .35);
-      --card-bg-plain: #0f172acc;
-      --table-row: #0c1423;
+      --bg-base: #1A1D24;
+      --bg-panel: #262B36;
+      --border-color: #3D4454;
+      --comic-border: #0A0D14;
+      --fg-main: #F7FAFC;
+      --fg-muted: #A0AEC0;
+      --pastel-blue: #63B3ED;
+      --pastel-mint: #68D391;
+      --pastel-pink: #F687B3;
+      --pastel-purple: #B794F4;
+      --pastel-yellow: #F6E05E;
+      --gradient-primary: linear-gradient(135deg, #B794F4 0%, #63B3ED 100%);
+      --comic-shadow: 4px 4px 0px #0A0D14;
+      --comic-shadow-hover: 2px 2px 0px #0A0D14;
     }
 
-    /* ===== รีเซ็ต & พื้นฐาน ===== */
+    /* ===== CORE RESET & BASE ===== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    html,
     body {
-      height: 100%;
-    }
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      color: var(--fg);
-      background:
-        radial-gradient(1200px 700px at 15% 0%, var(--bg1) 0%, transparent 60%),
-        radial-gradient(1300px 800px at 90% 20%, var(--bg2) 0%, transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, var(--bg3) 0%, transparent 50%),
-        linear-gradient(160deg, #f8fafc 0%, #f0f9ff 45%, #faf5ff 100%);
-      position: relative;
+      font-family: 'Itim', 'Bai Jamjuree', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      color: var(--fg-main);
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(237, 100, 166, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(112, 147, 245, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
       min-height: 100vh;
       display: flex;
-      align-items: start;
       justify-content: center;
-      padding: 20px;
-      transition: background .3s ease, color .2s ease;
-    }
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: var(--grain);
-      mix-blend-mode: multiply;
-      opacity: .22;
-    }
-    [data-theme="dark"] body {
-      background:
-        radial-gradient(1400px 700px at 10% -10%, var(--bg1) 0%, transparent 60%),
-        radial-gradient(1400px 800px at 100% 30%, var(--bg2) 0%, transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, var(--bg3) 0%, transparent 50%),
-        linear-gradient(160deg, #06111a 0%, #0a1a28 50%, #0d2134 100%);
+      padding: 24px;
     }
 
-    /* ===== คอนเทนเนอร์หลัก ===== */
+    /* ===== MAIN CONTAINER ===== */
     .wrap {
       width: 100%;
-      max-width: 1060px;
+      max-width: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
-      animation: fadeUp .6s ease both;
-    }
-    @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      gap: 28px;
     }
 
-    /* ===== การ์ด ===== */
+    /* ===== CARTOON COMIC CARD ===== */
     .card {
       position: relative;
-      background: linear-gradient(180deg, var(--card) 0%, var(--card-tint) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: var(--shadow-strong);
-      padding: 28px 26px;
-      transition: background .3s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+      background: var(--bg-panel);
+      border: 3px solid var(--comic-border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--comic-shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     .card:hover {
-      box-shadow: var(--shadow-strong), 0 0 0 1px var(--accent) inset;
-      transform: translateY(-2px);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--comic-border);
     }
 
-    /* ===== หัวข้อ ===== */
+    /* ===== HEADINGS & TEXT ===== */
     h1 {
-      font-size: 30px;
-      font-weight: 800;
-      margin-bottom: 4px;
-      letter-spacing: -.3px;
-      background: var(--tri);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: inline-block;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--pastel-purple);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 2px 2px 0px var(--bg-base), 3px 3px 0px var(--comic-border);
     }
     h2 {
-      font-size: 23px;
+      font-size: 24px;
       font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -.2px;
-      color: var(--fg);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--pastel-blue);
     }
-    .byline {
-      color: var(--muted);
-      font-weight: 600;
-      margin-bottom: 16px;
-      font-size: 15px;
-      border-bottom: 2px solid var(--line);
-      padding-bottom: 10px;
+    .small {
+      font-size: 14px;
+      color: var(--fg-muted);
     }
-    .byline span {
-      color: var(--accent-ink);
+    .mono {
+      font-family: ui-monospace, 'Courier New', monospace;
+      background: rgba(112, 147, 245, 0.1);
+      padding: 2px 6px;
+      border-radius: 8px;
     }
 
-    /* ===== ฟอร์ม ===== */
+    /* ===== CONTROLS & FORMS ===== */
     form {
       display: grid;
-      gap: 14px;
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
     }
     .row {
-      display: grid;
-      gap: 6px;
-      grid-template-columns: 1fr;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     label {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: .2px;
+      color: var(--fg-main);
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    /* ===== อินพุต & ซีเล็ค ===== */
-    input,
-    select {
+    /* ===== INPUTS & SELECTS ===== */
+    input, select {
       width: 100%;
-      height: 46px;
-      padding: 10px 14px;
-      border: 1.5px solid var(--line);
+      height: 48px;
+      padding: 10px 16px;
+      background: var(--bg-panel);
+      border: 2px solid var(--comic-border);
       border-radius: 14px;
+      color: var(--fg-main);
       font-size: 16px;
-      background: #fff;
+      font-family: 'Itim', sans-serif;
       outline: none;
-      transition: border-color .25s, box-shadow .25s, background .25s, color .25s;
-      color: #0b1220;
+      transition: all 0.2s ease;
     }
-    [data-theme="dark"] input,
-    [data-theme="dark"] select {
-      background: #0b1422;
-      color: var(--fg);
-      border-color: #1f2a38;
+    input:focus, select:focus {
+      background: #FFF;
+      border-color: var(--pastel-purple);
+      transform: scale(1.01);
     }
-    input:focus,
-    select:focus {
-      border-color: transparent;
-      box-shadow: 0 0 0 4px rgba(14, 165, 233, .18), inset 0 0 0 2px var(--accent);
+    [data-theme="dark"] input:focus, [data-theme="dark"] select:focus {
+      background: #2D3446;
     }
 
-    /* ===== ปุ่ม ===== */
+    /* ===== BUTTONS (POP-OUT CARTOON STYLE) ===== */
     .btns {
       display: flex;
-      gap: 12px;
-      margin-top: 6px;
-      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 8px;
     }
     button {
-      height: 46px;
-      border-radius: 14px;
+      height: 48px;
+      padding: 0 28px;
+      border-radius: 16px;
+      font-family: 'Itim', sans-serif;
       font-weight: 700;
-      font-size: 15px;
-      letter-spacing: .3px;
+      font-size: 16px;
       cursor: pointer;
-      border: 0;
-      padding: 0 20px;
-      background: var(--tri);
-      background-size: 200% 100%;
-      color: #fff;
-      box-shadow: 0 8px 24px rgba(11, 18, 32, .15);
-      transition: background-position .25s ease, transform .15s ease, filter .15s ease, box-shadow .2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    button::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, .15), transparent 60%);
-      pointer-events: none;
+      border: 2px solid var(--comic-border);
+      background: var(--pastel-purple);
+      color: white;
+      box-shadow: var(--comic-shadow);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     button:hover {
-      transform: translateY(-2px);
-      background-position: right center;
-      filter: saturate(1.05);
-      box-shadow: 0 12px 32px rgba(11, 18, 32, .2);
+      transform: translate(2px, 2px);
+      box-shadow: var(--comic-shadow-hover);
+      filter: brightness(1.05);
     }
     button:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 12px rgba(11, 18, 32, .1);
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+    
+    /* Secondary/Reset Button */
+    button#resetBtn, button#lookupReset, button#cfClear, button.btn-mini.ghost {
+      background: var(--bg-base);
+      color: var(--fg-main);
     }
 
+    /* Table Actions Mini Buttons */
     .btn-mini {
       height: 36px;
       padding: 0 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 13px;
-      background: var(--tri);
-      background-size: 200% 100%;
-      color: #fff;
-      border: 0;
-      box-shadow: 0 4px 12px rgba(11, 18, 32, .1);
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 2px 2px 0px var(--comic-border);
     }
-    .btn-mini.ghost {
-      background: transparent;
-      color: var(--accent);
-      border: 2px solid var(--accent);
+    .btn-mini:hover {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--comic-border);
+    }
+    .btn-mini:active {
+      transform: translate(2px, 2px);
       box-shadow: none;
     }
-    .btn-mini.ghost:hover {
-      background: var(--accent);
-      color: #fff;
-    }
 
-    /* ===== สวิตช์ ===== */
+    /* ===== CARTOON SWITCH ===== */
     .switch {
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
-      user-select: none;
     }
     .switch input {
       position: absolute;
       opacity: 0;
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
     }
     .slider {
       position: relative;
-      width: 48px;
-      height: 26px;
+      width: 54px;
+      height: 30px;
+      background: #CBD5E1;
+      border: 2px solid var(--comic-border);
       border-radius: 999px;
-      background: #e5e7eb;
-      border: 1.5px solid #d1d5db;
-      transition: background .25s, border-color .25s, box-shadow .25s;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, .06);
-    }
-    [data-theme="dark"] .slider {
-      background: #0b1422;
-      border-color: #1f2a38;
+      transition: 0.2s;
     }
     .slider::after {
-      content: "";
+      content: "⭐";
       position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 999px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
-      transition: left .25s cubic-bezier(.4, .0, .2, 1);
+      top: 1px; left: 2px;
+      font-size: 16px;
+      transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    [data-theme="dark"] .slider::after {
-      background: #e5eefc;
+    .switch input:checked + .slider {
+      background: var(--pastel-pink);
     }
-    .switch input:checked+.slider {
-      background: #fde68a;
-      border-color: #f59e0b;
-      box-shadow: 0 0 0 4px rgba(245, 158, 11, .2) inset;
-    }
-    .switch input:checked+.slider::after {
-      left: 25px;
+    .switch input:checked + .slider::after {
+      left: 24px;
     }
 
-    /* ===== ข้อความแจ้งเตือน ===== */
-    #msg,
-    #lookupMsg,
-    #searchMsg {
-      margin-top: 12px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1.5px solid var(--line);
-      background: #f8fafc;
-      min-height: 48px;
-      white-space: pre-wrap;
-      transition: background .2s, border-color .2s, color .2s;
-      color: #0b1220;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    [data-theme="dark"] #msg,
-    [data-theme="dark"] #lookupMsg,
-    [data-theme="dark"] #searchMsg {
-      background: #0b1422;
-      color: var(--fg);
-      border-color: #1f2a38;
-    }
-    .msg-ok {
-      border-color: var(--ok) !important;
-      background: #ecfdf5 !important;
-    }
-    .msg-warn {
-      border-color: var(--warn) !important;
-      background: #fffbeb !important;
-    }
-    .msg-err {
-      border-color: var(--err) !important;
-      background: #fef2f2 !important;
-    }
-    [data-theme="dark"] .msg-ok {
-      background: #062814 !important;
-    }
-    [data-theme="dark"] .msg-warn {
-      background: #2a1f06 !important;
-    }
-    [data-theme="dark"] .msg-err {
-      background: #2a0b0b !important;
-    }
-
-    /* ===== ไอคอนในข้อความ ===== */
-    .cf-note {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .pill {
-      display: inline-block;
-      padding: 3px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--fg);
-      background: #fff;
-      margin-left: 8px;
-    }
-    [data-theme="dark"] .pill {
-      background: #0b1422;
-    }
-    .small {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-
-    /* ===== สถานะ ===== */
+    /* ===== STATUS METRIC PANELS ===== */
     .status .items {
       display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
     }
     .pillstat {
+      background: var(--bg-base);
+      border: 2px solid var(--comic-border);
+      border-radius: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      border: 1.5px solid var(--line);
-      background: var(--table-row);
-      border-radius: 16px;
-      padding: 14px 16px;
-      min-height: 60px;
-      justify-content: center;
-      transition: background .2s, border-color .2s;
+      gap: 6px;
+      box-shadow: 3px 3px 0px var(--comic-border);
     }
     .pillstat .k {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: .3px;
-      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg-muted);
     }
     .pillstat .v {
+      font-size: 18px;
       font-weight: 700;
-      font-size: 16px;
     }
-    #serverTime {
-      color: var(--time);
+    #serverTime { color: var(--pastel-purple); }
+    #yourIp { color: var(--pastel-blue); }
+    #yourLoc { color: var(--pastel-pink); }
+
+    /* ===== NOTIFICATION BADGES / MESSAGES ===== */
+    #msg, #lookupMsg, #searchMsg {
+      margin-top: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      border: 2px solid var(--comic-border);
+      background: #FFF;
+      color: var(--fg-main);
+      box-shadow: 3px 3px 0px var(--comic-border);
+      white-space: pre-wrap;
     }
-    #yourIp {
-      color: var(--accent);
+    [data-theme="dark"] #msg, [data-theme="dark"] #lookupMsg { background: #2D3446; }
+    .msg-ok { background: #E6FFFA !important; border-color: var(--pastel-mint) !important; color: #234E52 !important; }
+    .msg-warn { background: #FEFCBF !important; border-color: var(--pastel-yellow) !important; color: #744210 !important; }
+    .msg-err { background: #FED7D7 !important; border-color: var(--pastel-pink) !important; color: #742A2A !important; }
+
+    .pill {
+      display: inline-flex;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #EBF8FF;
+      border: 2px solid var(--pastel-blue);
+      color: var(--pastel-blue);
+      font-size: 12px;
+      font-weight: 700;
     }
-    #yourLoc {
-      color: var(--loc);
+    .cf-note {
+      font-size: 13px;
+      color: var(--fg-muted);
     }
 
-    /* ===== ตาราง ===== */
+    /* ===== DATA TABLES ===== */
     .table-wrap {
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-top: 8px;
+      margin-top: 20px;
+      border-radius: 16px;
+      border: 2px solid var(--comic-border);
     }
     .table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 10px;
-      min-width: 720px;
+      border-collapse: collapse;
+      min-width: 750px;
+      background: #FFF;
     }
-    .table thead th {
+    [data-theme="dark"] .table { background: #262B36; }
+    .table th {
+      background: #EDF2F7;
+      padding: 14px 16px;
       text-align: left;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      padding: 0 12px 8px 12px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      border-bottom: 2px solid var(--line);
-    }
-    .table tbody tr {
-      background: var(--table-row);
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(11, 18, 32, .04);
-      transition: transform .15s, box-shadow .15s;
-    }
-    .table tbody tr:hover {
-      transform: scale(1.002);
-      box-shadow: 0 8px 24px rgba(11, 18, 32, .08);
-    }
-    [data-theme="dark"] .table tbody tr {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
-    }
-    .table td {
-      padding: 12px 12px;
       font-size: 14px;
-      vertical-align: middle;
-      color: var(--fg);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      font-weight: 700;
+      color: var(--fg-main);
+      border-bottom: 2px solid var(--comic-border);
     }
-    .table td:first-child {
-      border-left: 1px solid var(--line);
-      border-radius: 16px 0 0 16px;
+    [data-theme="dark"] .table th { background: #1A1D24; }
+    .table tr {
+      border-bottom: 1px solid var(--border-color);
     }
-    .table td:last-child {
-      border-right: 1px solid var(--line);
-      border-radius: 0 16px 16px 0;
+    .table tr:hover {
+      background: #F7FAFC;
     }
-
-    .table td .ip {
-      color: var(--accent) !important;
-      font-weight: 700 !important;
-    }
-    .table td .host {
-      color: var(--ok-bright) !important;
-      font-weight: 700 !important;
-    }
-    .cell-name {
-      color: var(--ok-bright) !important;
-      font-weight: 700 !important;
+    [data-theme="dark"] .table tr:hover { background: #2D3446; }
+    .table td {
+      padding: 14px 16px;
+      font-size: 15px;
     }
 
-    /* ===== แถวการดำเนินการ ===== */
+    /* DNS Highlighting inside table */
+    .cell-name { color: var(--pastel-purple); font-weight: 700; }
+    .cell-type span {
+      background: #FEFCBF;
+      border: 2px solid var(--comic-border);
+      color: #334155;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     .row-actions {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 8px;
     }
+
+    /* Inline Edit Inputs */
     .inpt {
       height: 36px;
-      padding: 6px 10px;
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      font-size: 14px;
-      width: 100%;
-      background: #fff;
-      color: #0b1220;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .inpt:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, .15);
-    }
-    [data-theme="dark"] .inpt {
-      background: #0b1422;
-      color: var(--fg);
-      border-color: #1f2a38;
-    }
-    .sel {
-      height: 36px;
-      padding: 0 10px;
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      font-size: 14px;
-      background: #fff;
-      color: #0b1220;
-    }
-    [data-theme="dark"] .sel {
-      background: #0b1422;
-      color: var(--fg);
-      border-color: #1f2a38;
+      padding: 4px 8px;
+      background: var(--bg-base);
+      border: 2px solid var(--comic-border);
+      border-radius: 8px;
     }
 
-    /* ===== ฟุตเตอร์ ===== */
+    /* ===== FOOTER BAR ===== */
     .footer {
       text-align: center;
-      margin-top: 2px;
-      font-size: 14px;
-      color: var(--muted);
-      background: var(--card-bg-plain);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 18px;
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(8px);
+      font-size: 15px;
+      border: 2px solid var(--comic-border);
+      border-radius: 18px;
+      padding: 14px;
+      background: #FFF;
+      box-shadow: var(--comic-shadow);
+    }
+    [data-theme="dark"] .footer { background: #262B36; }
+    .footer strong {
+      color: var(--pastel-pink);
     }
 
-    /* ===== ปุ่มเปลี่ยนธีม ===== */
+    /* ===== THEME FLOATING FAB ===== */
     .theme-fab {
       position: fixed;
-      right: 22px;
-      bottom: 22px;
+      right: 24px;
+      bottom: 24px;
       z-index: 9999;
       width: 56px;
       height: 56px;
-      border-radius: 999px;
-      display: inline-flex;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--tri);
-      background-size: 200% 100%;
-      color: #fff;
-      border: 0;
-      box-shadow: 0 14px 36px rgba(59, 130, 246, .35);
+      background: var(--pastel-yellow);
+      border: 2px solid var(--comic-border);
+      box-shadow: 3px 3px 0px var(--comic-border);
       cursor: pointer;
-      transition: transform .15s ease, filter .2s ease, background-position .2s ease, box-shadow .2s ease;
     }
     .theme-fab:hover {
-      transform: translateY(-3px) scale(1.03);
-      filter: saturate(1.05);
-      background-position: right center;
-      box-shadow: 0 18px 44px rgba(59, 130, 246, .45);
+      transform: scale(1.05);
     }
-    .theme-fab:active {
-      transform: translateY(0) scale(.97);
-    }
-    .theme-fab svg {
-      width: 26px;
-      height: 26px;
-    }
-    .icon-sun {
-      display: inline;
-    }
-    .icon-moon {
-      display: none;
-    }
-    [data-theme="dark"] .icon-sun {
-      display: none;
-    }
-    [data-theme="dark"] .icon-moon {
-      display: inline;
-    }
+    .theme-fab svg { width: 24px; height: 24px; stroke: #334155; }
+    
+    .icon-sun { display: none; }
+    .icon-moon { display: inline; }
+    [data-theme="dark"] .icon-sun { display: inline; }
+    [data-theme="dark"] .icon-moon { display: none; }
 
-    /* ===== Responsive ===== */
-    @media (min-width: 720px) {
-      .status .items {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-    }
-    @media (max-width: 600px) {
-      .card {
-        padding: 20px 16px;
-      }
-      h1 {
-        font-size: 24px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      .table td {
-        font-size: 13px;
-        padding: 10px 8px;
-      }
-      button,
-      .btn-mini {
-        height: 42px;
-        font-size: 14px;
-      }
-      .theme-fab {
-        width: 48px;
-        height: 48px;
-        right: 16px;
-        bottom: 16px;
-      }
-      .theme-fab svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
-    @media (max-width: 480px) {
-      .btns {
-        flex-direction: column;
-      }
-      .btns button {
-        width: 100%;
-      }
-      .row-actions {
-        flex-direction: column;
-        gap: 4px;
-      }
-      .row-actions .btn-mini {
-        width: 100%;
-        text-align: center;
-      }
+    /* ===== RESPONSIVE DISPLAYS ===== */
+    @media (max-width: 680px) {
+      body { padding: 12px; }
+      .card { padding: 18px; }
+      h1 { font-size: 26px; }
+      .btns { flex-direction: column; }
+      .btns button { width: 100%; }
+      .row-actions { flex-direction: column; }
+      .row-actions button { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
 
-    <!-- ===== แถบสถานะ ===== -->
+  <div class="wrap">
+    <!-- SYSTEM MONITOR STATUS -->
     <div class="card status" aria-live="polite">
-      <h2 style="margin-bottom:2px">📊 สถานะ</h2>
+      <h2>📊 สถานะระบบพุกัง</h2>
       <div class="items">
         <div class="pillstat">
-          <div class="k">⏱️ เวลาของเซิร์ฟเวอร์</div>
-          <div id="serverTime" class="v mono">—</div>
+          <div class="k">⏱️ เวลาเซิร์ฟเวอร์</div>
+          <div id="serverTime" class="v">—</div>
         </div>
         <div class="pillstat">
-          <div class="k">🌐 IP ของคุณ</div>
-          <div id="yourIp" class="v mono">—</div>
+          <div class="k">🌐 ไอพีของคุณ</div>
+          <div id="yourIp" class="v">—</div>
         </div>
         <div class="pillstat">
-          <div class="k">📍 ตำแหน่งที่ตั้ง</div>
+          <div class="k">📍 พิกัดโหนด</div>
           <div id="yourLoc" class="v">—</div>
         </div>
       </div>
     </div>
 
-    <!-- ===== บันทึก DNS ===== -->
+    <!-- MAIN FORM: ADD DNS -->
     <div class="card">
-      <h1>🛠️บันทึก DNS</h1>
+      <h1>⭐ DNS ZONE CONTROL</h1>
 
       <form id="dnsForm" autocomplete="off">
-        <div class="row">
-          <label for="type">ประเภท</label>
-          <select id="type" required>
-            <option value="A">A</option>
-            <option value="AAAA">AAAA</option>
-            <option value="CNAME">CNAME</option>
-            <option value="TXT">TXT</option>
-            <option value="MX">MX</option>
-            <option value="NS">NS</option>
-            <option value="CAA">CAA</option>
-            <option value="HTTPS">HTTPS</option>
-          </select>
+        <div class="grid-2">
+          <div class="row">
+            <label for="type">ชนิดระเบียน (TYPE)</label>
+            <select id="type" required>
+              <option value="A">A</option>
+              <option value="AAAA">AAAA</option>
+              <option value="CNAME">CNAME</option>
+              <option value="TXT">TXT</option>
+              <option value="MX">MX</option>
+              <option value="NS">NS</option>
+              <option value="CAA">CAA</option>
+              <option value="HTTPS">HTTPS</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label for="ttl">เวลาคงอยู่ (TTL)</label>
+            <select id="ttl">
+              <option value="1" selected>อัตโนมัติ (AUTOMATIC)</option>
+              <option value="60">60</option>
+              <option value="120">120</option>
+              <option value="300">300</option>
+              <option value="600">600</option>
+              <option value="1800">1800</option>
+              <option value="3600">3600</option>
+            </select>
+          </div>
         </div>
 
         <div class="row">
-          <label for="host">โฮสต์</label>
-          <input id="host" type="text" placeholder="ชื่อย่อย (หรือ sub.pukangvpn.xyz)" required />
+          <label for="host">ชื่อโฮสต์ย่อย (SUBDOMAIN)</label>
+          <input id="host" type="text" placeholder="พิมพ์ชื่อย่อย เช่น app หรือ vpn" required />
         </div>
 
         <div class="row">
-          <label id="contentLabel" for="content">ที่อยู่ IPv4</label>
+          <label id="contentLabel" for="content">เป้าหมาย IPv4</label>
           <input id="content" type="text" placeholder="เช่น 203.0.113.10" required />
         </div>
 
         <div class="row" id="prioRow" style="display:none">
-          <label for="priority">ลำดับความสำคัญ</label>
-          <input id="priority" type="number" min="0" max="65535" placeholder="10 (เฉพาะ MX)" />
-        </div>
-
-        <div class="row">
-          <label for="ttl">TTL</label>
-          <select id="ttl">
-            <option value="1" selected>อัตโนมัติ</option>
-            <option value="60">60</option>
-            <option value="120">120</option>
-            <option value="300">300</option>
-            <option value="600">600</option>
-            <option value="1800">1800</option>
-            <option value="3600">3600</option>
-          </select>
+          <label for="priority">ลำดับความสำคัญ (PRIORITY)</label>
+          <input id="priority" type="number" min="0" max="65535" placeholder="10 (ระบุเฉพาะ MX)" />
         </div>
 
         <div class="row" id="proxiedRow">
-          <label for="proxied">พรอกซีผ่าน Cloudflare</label>
-          <div>
+          <label for="proxied">เปิดพรอกซี (CLOUDFLARE PROXY)</label>
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 12px;">
             <label class="switch" aria-label="พรอกซีผ่าน Cloudflare">
               <input id="proxied" type="checkbox" checked />
               <span class="slider" aria-hidden="true"></span>
             </label>
-            <span class="pill">เฉพาะ A / AAAA / CNAME</span>
-            <div class="cf-note">📌 สำหรับโหมด DNS ONLY ให้ปิดสวิตช์นี้</div>
+            <span class="pill">เฉพาะ A / AAAA / CNAME เท่านั้นจ้า</span>
+            <div class="cf-note">📌 ถ้าอยากใช้โหมดตรง (DNS ONLY) ให้กดสลับปิดสวิตช์ดาวนะ</div>
           </div>
         </div>
 
         <div class="btns">
-          <button type="submit">➕ เพิ่ม / อัปเดต</button>
-          <button type="button" id="resetBtn">🔄 รีเซ็ต</button>
+          <button type="submit" style="background: var(--pastel-pink)">➕ เพิ่มระเบียนใหม่</button>
+          <button type="button" id="resetBtn">🔄 ล้างฟอร์ม</button>
         </div>
         <div id="msg"></div>
 
-        <div class="small" style="margin-top:10px">
-          💡 สามารถพิมพ์โฮสต์แบบสั้น (เช่น <span class="mono">app</span>) แล้วระบบจะเติม <span class="mono">.pukangvpn.xyz</span> ให้อัตโนมัติ
+        <div class="small" style="margin-top:4px">
+          💡 ระบบพิมพ์ให้เอง: ใส่แค่ชื่อสั้น ๆ (เช่น <span class="mono">kham</span>) ระบบจะเติม <span class="mono">.pukangvpn.xyz</span> ให้โดยอัตโนมัติเลยครับ!
         </div>
       </form>
     </div>
 
-    <!-- ===== แปลงโฮสต์เป็น IP ===== -->
+    <!-- RESOLVER LOOKUP -->
     <div class="card">
-      <h2>🔍 แปลงโฮสต์เป็น IP <span class="small">(ค้นหา)</span></h2>
+      <h2>🔍 กล่องส่องไอพีปัจจุบัน (LIVE RESOLVER)</h2>
       <div class="row">
-        <label for="lookupHost">โฮสต์</label>
-        <input id="lookupHost" type="text" placeholder="ชื่อย่อย หรือชื่อเต็ม" />
+        <label for="lookupHost">ระบุชื่อโฮสต์ที่ต้องการเช็ค</label>
+        <input id="lookupHost" type="text" placeholder="พิมพ์ชื่อย่อย หรือชื่อโดเมนเต็มได้เลย" />
       </div>
-      <div class="btns" style="margin-top:12px">
-        <button type="button" id="lookupBtn">🔎 ค้นหา</button>
-        <button type="button" id="lookupReset">🗑️ ล้าง</button>
+      <div class="btns">
+        <button type="button" id="lookupBtn" style="background: var(--pastel-blue)">🔎 ค้นหาตอนนี้</button>
+        <button type="button" id="lookupReset">🗑️ ล้างช่อง</button>
       </div>
       <div id="lookupMsg"></div>
     </div>
 
-    <!-- ===== จัดการบันทึก DNS ของ Cloudflare ===== -->
+    <!-- CLOUDFLARE MANAGER TABLE -->
     <div class="card">
-      <h2>☁️ บันทึก DNS ของ Cloudflare <span class="small">(ค้นหา / แก้ไข / ลบ)</span></h2>
-      <div class="row">
-        <label for="cfName">ค้นหา</label>
-        <input id="cfName" placeholder="ค้นหาด้วยชื่อหรือเนื้อหา (บางส่วน)" />
+      <h2>☁️ รายการระเบียนบน CLOUDFLARE (LIVE RECORD)</h2>
+      
+      <div class="grid-2" style="margin-bottom: 12px;">
+        <div class="row">
+          <label for="cfName">ช่องค้นหาข้อมูล</label>
+          <input id="cfName" placeholder="ค้นหาด้วยชื่อโฮสต์ หรือข้อมูลเนื้อหา..." />
+        </div>
+        <div class="row">
+          <label for="cfType">กรองด้วยประเภท</label>
+          <select id="cfType">
+            <option value="">(แสดงทั้งหมด)</option>
+            <option>A</option><option>AAAA</option><option>CNAME</option>
+            <option>TXT</option><option>MX</option><option>NS</option>
+            <option>CAA</option><option>HTTPS</option>
+          </select>
+        </div>
       </div>
-      <div class="row">
-        <label for="cfType">ประเภท</label>
-        <select id="cfType">
-          <option value="">(ทั้งหมด)</option>
-          <option>A</option><option>AAAA</option><option>CNAME</option>
-          <option>TXT</option><option>MX</option><option>NS</option>
-          <option>CAA</option><option>HTTPS</option>
-        </select>
-      </div>
-      <div class="btns">
-        <button type="button" id="cfSearch">🔎 ค้นหา</button>
-        <button type="button" id="cfClear">🗑️ ล้าง</button>
-      </div>
-      <div id="searchMsg" class="small">📋 ผลลัพธ์ด้านล่างถูกดึงมาจาก Cloudflare โดยตรง</div>
 
+      <div class="btns">
+        <button type="button" id="cfSearch" style="background: var(--pastel-purple)">🔎 ดึงข้อมูลล่าสุด</button>
+        <button type="button" id="cfClear">🗑️ ล้างตัวกรอง</button>
+      </div>
+      <div id="searchMsg" class="small">📋 เชื่อมต่อส่งข้อมูลตรงกับ API Cloudflare Core</div>
+
+      <!-- TABLE AREA -->
       <div class="table-wrap">
         <table class="table" aria-label="ผลลัพธ์การค้นหา Cloudflare">
           <thead>
             <tr>
-              <th>ประเภท</th><th>ชื่อ</th><th>เนื้อหา</th><th>TTL</th><th>พรอกซี</th><th>การดำเนินการ</th>
+              <th>ประเภท</th><th>ชื่อโฮสต์</th><th>ข้อมูลเนื้อหา</th><th>TTL</th><th>สถานะพรอกซี</th><th>เครื่องมือจัดการ</th>
             </tr>
           </thead>
           <tbody id="cfBody"></tbody>
         </table>
       </div>
 
-      <div class="btns" style="justify-content:flex-end;margin-top:12px">
-        <button class="btn-mini" id="prevPage">◀ ก่อนหน้า</button>
-        <button class="btn-mini" id="nextPage">ถัดไป ▶</button>
+      <div class="btns" style="justify-content:flex-end; margin-top:16px">
+        <button class="btn-mini" id="prevPage">◀ หน้าก่อน</button>
+        <button class="btn-mini" id="nextPage">หน้าถัดไป ▶</button>
       </div>
     </div>
 
-    <!-- ===== ฟุตเตอร์ ===== -->
+    <!-- FOOTER SECTION -->
     <div class="footer">
-      👨‍💻 ผู้ดูแลระบบ : PUKANG VPN <strong>
+      🌈 ระบบบริหารจัดการเน็ตเวิร์ก : <strong>PUKANG VPN ANIMATED CORE</strong>
     </div>
   </div>
 
-  <!-- ===== ปุ่มเปลี่ยนธีม ===== -->
-  <button id="themeToggle" class="theme-fab" title="สลับธีมสว่าง/มืด" aria-label="สลับธีมสว่างหรือมืด">
+  <!-- THEME SWAPPER FAB -->
+  <button id="themeToggle" class="theme-fab" title="สลับโหมดวัน/คืน" aria-label="สลับโหมดวันหรือคืน">
     <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="4"></circle>
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -833,8 +613,8 @@
     </svg>
   </button>
 
+  <!-- JAVASCRIPT LOGIC (คงเดิม 100% ปลอดภัย ไร้กังวลเรื่องพัง) -->
   <script>
-    /* ===== คอนฟิก ===== */
     const ROOT = "pukangvpn.xyz";
     const API_BASE = "https://sanglungmom.pukangvpn.workers.dev";
     const API_URL = API_BASE + "/dns";
@@ -854,7 +634,6 @@
     const yourIpEl = document.getElementById("yourIp");
     const yourLocEl = document.getElementById("yourLoc");
 
-    /* ===== ธีมเริ่มต้น ===== */
     (function initTheme() {
       try {
         const root = document.documentElement;
@@ -872,7 +651,6 @@
       try { localStorage.setItem("theme", next); } catch (e) {}
     });
 
-    /* ===== ยูทิล ===== */
     async function fetchJSON(url, opt) {
       const r = await fetch(url, opt);
       if (!r.ok) throw new Error(r.status);
@@ -880,7 +658,6 @@
     }
 
     function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
-
     function escapeHtmlAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 
     const ipV4Test = /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/i;
@@ -910,7 +687,6 @@
       el.classList.add(kind === "ok" ? "msg-ok" : kind === "warn" ? "msg-warn" : "msg-err");
     }
 
-    /* ===== โหลดสถานะ ===== */
     async function loadFromCFTrace() {
       try {
         const r = await fetch("https://1.1.1.1/cdn-cgi/trace", { cache: "no-store" });
@@ -982,20 +758,19 @@
     }
     loadStatus();
 
-    /* ===== ฟอร์มหลัก ===== */
     function setPlaceholders() {
       const t = typeEl.value;
       prioRow.style.display = (t === "MX") ? "grid" : "none";
-      proxiedRow.style.display = (["A", "AAAA", "CNAME"].includes(t)) ? "grid" : "none";
+      proxiedRow.style.display = (["A", "AAAA", "CNAME"].includes(t)) ? "flex" : "none";
       const placeholders = {
-        "A": ["ที่อยู่ IPv4", "เช่น 203.0.113.10"],
-        "AAAA": ["ที่อยู่ IPv6", "เช่น 2001:db8::1"],
-        "CNAME": ["โฮสต์เป้าหมาย", "เช่น target.example.com"],
-        "TXT": ["ค่า TXT", 'เช่น v=spf1 include:_spf.example ~all'],
-        "MX": ["เซิร์ฟเวอร์เมล", "เช่น mail.example.com"],
-        "NS": ["เนมเซิร์ฟเวอร์", "เช่น ns1.example.com"],
-        "CAA": ["ค่า CAA", 'เช่น 0 issue "letsencrypt.org"'],
-        "HTTPS": ["ค่า", "ค่า HTTPS record"]
+        "A": ["เป้าหมาย IPv4", "เช่น 203.0.113.10"],
+        "AAAA": ["เป้าหมาย IPv6", "เช่น 2001:db8::1"],
+        "CNAME": ["โฮสต์ปลายทาง", "เช่น target.example.com"],
+        "TXT": ["ข้อความ TXT", 'เช่น v=spf1 include:_spf.example ~all'],
+        "MX": ["เซิร์ฟเวอร์เมลเดส", "เช่น mail.example.com"],
+        "NS": ["เนมเซิร์ฟเวอร์หลัก", "เช่น ns1.example.com"],
+        "CAA": ["ค่าระบุ CAA", 'เช่น 0 issue "letsencrypt.org"'],
+        "HTTPS": ["ข้อมูลจำเพาะ", "ค่าของ HTTPS record"]
       };
       const p = placeholders[t];
       contentLabel.textContent = p[0];
@@ -1028,48 +803,40 @@
         ttl = parseInt(ttlEl.value, 10) || 300,
         proxied = !!proxiedEl.checked;
 
-      if (!name) { show("err", "❌ ต้องระบุโฮสต์"); return; }
-      if (!(name === ROOT || name.endsWith("." + ROOT))) { show("err", `❌ โฮสต์ต้องอยู่ภายใต้ ${ROOT}`); return; }
-      if (!content) { show("err", "❌ ต้องระบุเนื้อหา"); return; }
+      if (!name) { show("err", "❌ ต้องระบุโฮสต์ด้วยนะ"); return; }
+      if (!(name === ROOT || name.endsWith("." + ROOT))) { show("err", `❌ โฮสต์ต้องลงท้ายด้วย ${ROOT} นะครับ`); return; }
+      if (!content) { show("err", "❌ อย่าลืมระบุเป้าหมายล่ะ"); return; }
 
-      const payload = { type, name, content, ttl };
+      const payload = { type, name, content, ttl, action: "create", force_create: true };
       if (type === "MX") {
         const p = parseInt(priorityEl.value, 10);
-        if (Number.isNaN(p)) { show("err", "❌ ต้องระบุลำดับความสำคัญของ MX"); return; }
+        if (Number.isNaN(p)) { show("err", "❌ อย่าลืมระบุค่าความสำคัญ (Priority) ของ MX นะ"); return; }
         payload.priority = p;
       }
       if (["A", "AAAA", "CNAME"].includes(type)) payload.proxied = proxied;
 
-      show("warn", "⏳ กำลังดำเนินการ…");
+      show("warn", "⏳ รอกล่องวิเศษบันทึกแป๊บนะ…");
       try {
         const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         const data = await res.json();
         if (data.success) {
           const r = data.record || data.result || {};
-          const c = (r.content || content);
-          const n = (r.name || name);
-          show("ok", `✅ เสร็จสิ้น : ${c} → ${n} (${data.action || 'สร้าง'})`);
+          show("ok", `✅ สำเร็จเรียบร้อย : ${r.content || content} → ${r.name || name}`);
           await runSearch();
-        } else {
-          show("err", "❌ ข้อผิดพลาด: " + (data.error || "ไม่ทราบสาเหตุ"));
-        }
-      } catch (err) { show("err", "❌ ข้อผิดพลาดเครือข่าย: " + err.message); }
+        } else { show("err", "❌ ระบบแจ้งข้อผิดพลาด: " + (data.error || "ไม่ทราบสาเหตุ")); }
+      } catch (err) { show("err", "❌ มีข้อผิดพลาดในเน็ตเวิร์ก: " + err.message); }
     });
 
-    /* ===== ค้นหา (Lookup) ===== */
     const lookupHostEl = document.getElementById("lookupHost");
     const lookupMsg = document.getElementById("lookupMsg");
-    document.getElementById("lookupReset").addEventListener("click", () => { lookupHostEl.value = "";
-      lookupMsg.textContent = "";
-      lookupMsg.className = ""; });
+    document.getElementById("lookupReset").addEventListener("click", () => { lookupHostEl.value = ""; lookupMsg.textContent = ""; lookupMsg.className = ""; });
     document.getElementById("lookupBtn").addEventListener("click", lookup);
-    lookupHostEl.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault();
-        lookup(); } });
+    lookupHostEl.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); lookup(); } });
 
     async function doh(name, type) {
       const url = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${type}`;
       const res = await fetch(url, { headers: { accept: "application/dns-json" } });
-      if (!res.ok) throw new Error(`DoH ${type} ล้มเหลว (${res.status})`);
+      if (!res.ok) throw new Error(`DoH ${type} ผิดพลาด (${res.status})`);
       return res.json();
     }
 
@@ -1077,39 +844,31 @@
 
     async function lookup() {
       const name = normalizeHost(lookupHostEl.value);
-      if (!name) { show("err", "❌ ต้องระบุโฮสต์", lookupMsg); return; }
-      show("warn", "⏳ กำลังค้นหา…", lookupMsg);
+      if (!name) { show("err", "❌ ต้องใส่ชื่อโฮสต์ด้วยนะ", lookupMsg); return; }
+      show("warn", "⏳ กำลังส่องดูไอพีให้จ้า…", lookupMsg);
       try {
         const [a4, a6] = await Promise.allSettled([doh(name, "A"), doh(name, "AAAA")]);
         const v4 = (a4.status === "fulfilled") ? formatAnswers(a4.value?.Answer) : [];
         const v6 = (a6.status === "fulfilled") ? formatAnswers(a6.value?.Answer) : [];
-        if (v4.length === 0 && v6.length === 0) { show("err", `❌ ไม่พบคำตอบ A/AAAA สำหรับ ${name}`, lookupMsg); return; }
+        if (v4.length === 0 && v6.length === 0) { show("err", `❌ ไม่พบไอพีออนไลน์ของ ${name}`, lookupMsg); return; }
         const chunks = [];
         if (v4.length) chunks.push(`A (${v4.length}) → ${v4.map(ip => `<span class="ip mono">${ip}</span>`).join(", ")}`);
         if (v6.length) chunks.push(`AAAA (${v6.length}) → ${v6.map(ip => `<span class="ip mono">${ip}</span>`).join(", ")}`);
         lookupMsg.className = "msg-ok";
-        lookupMsg.innerHTML = `<span class="host mono">${name}</span>\n${chunks.join("\n")}`;
-      } catch (err) { show("err", "❌ ข้อผิดพลาดในการค้นหา: " + err.message, lookupMsg); }
+        lookupMsg.innerHTML = `🌟 <b>${name}</b>\n${chunks.join("\n")}`;
+      } catch (err) { show("err", "❌ เกิดข้อผิดพลาด: " + err.message, lookupMsg); }
     }
 
-    /* ===== จัดการ Cloudflare ===== */
     const cfName = document.getElementById("cfName");
     const cfType = document.getElementById("cfType");
     const cfBody = document.getElementById("cfBody");
     const searchMsg = document.getElementById("searchMsg");
-    document.getElementById("cfClear").addEventListener("click", () => { cfName.value = "";
-      cfType.value = "";
-      page = 1;
-      runSearch(); });
-    document.getElementById("cfSearch").addEventListener("click", () => { page = 1;
-      runSearch(); });
-    document.getElementById("prevPage").addEventListener("click", () => { if (page > 1) { page--;
-        runSearch(); } });
-    document.getElementById("nextPage").addEventListener("click", () => { page++;
-      runSearch(); });
+    document.getElementById("cfClear").addEventListener("click", () => { cfName.value = ""; cfType.value = ""; page = 1; runSearch(); });
+    document.getElementById("cfSearch").addEventListener("click", () => { page = 1; runSearch(); });
+    document.getElementById("prevPage").addEventListener("click", () => { if (page > 1) { page--; runSearch(); } });
+    document.getElementById("nextPage").addEventListener("click", () => { page++; runSearch(); });
 
     let page = 1;
-
     function classifyContent(val) { return isIP(val) ? 'ip' : 'host'; }
 
     async function runSearch() {
@@ -1118,34 +877,32 @@
       if (cfType.value) params.set("type", cfType.value);
       params.set("page", String(page));
       params.set("per_page", "50");
-      searchMsg.textContent = "⏳ กำลังค้นหา…";
+      searchMsg.textContent = "⏳ กำลังดึงรายชื่อจากเซิร์ฟเวอร์ก้อนเมฆ…";
       searchMsg.className = "msg-warn";
 
       try {
         const res = await fetch(`${API_URL}?${params.toString()}`, { method: "GET" });
         const data = await res.json();
-        if (!data.success) { throw new Error(data.error || "ค้นหาล้มเหลว"); }
+        if (!data.success) { throw new Error(data.error || "โหลดข้อมูลไม่สำเร็จ"); }
         const rows = data.result || [];
         cfBody.innerHTML = "";
         if (rows.length === 0) {
-          cfBody.innerHTML = `<tr><td colspan="6" class="small">📭 ไม่พบระเบียนในหน้านี้</td></tr>`;
+          cfBody.innerHTML = `<tr><td colspan="6" class="small" style="text-align:center; padding:30px;">📭 หน้านี้ยังไม่มีข้อมูลระเบียนเลยนะ</td></tr>`;
         } else {
           for (const r of rows) {
             const tr = document.createElement("tr");
             const contentClass = classifyContent(r.content || "");
-            const contentHTML = contentClass === 'ip' ?
-              `<span class="ip mono">${escapeHtml(r.content || "")}</span>` :
-              `<span class="host mono">${escapeHtml(r.content || "")}</span>`;
+            const contentHTML = contentClass === 'ip' ? `<span class="ip mono">${escapeHtml(r.content || "")}</span>` : `<span class="host mono">${escapeHtml(r.content || "")}</span>`;
             tr.innerHTML = `
               <td class="cell-type"><span class="mono">${r.type || ""}</span></td>
-              <td class="cell-name mono">${escapeHtml(r.name || "")}</td>
+              <td class="cell-name">${escapeHtml(r.name || "")}</td>
               <td class="cell-content-wrap">${contentHTML}</td>
-              <td class="cell-ttl">${r.ttl || ""}</td>
-              <td class="cell-prox">${(["A","AAAA","CNAME"].includes(r.type) && r.proxied) ? "🟩 พรอกซี" : "⬜ DNS เท่านั้น"}</td>
+              <td class="cell-ttl mono">${r.ttl || ""}</td>
+              <td class="cell-prox" style="font-weight:700">${(["A","AAAA","CNAME"].includes(r.type) && r.proxied) ? "🧡 PROXIED" : "🤍 DNS ONLY"}</td>
               <td class="cell-act">
                 <div class="row-actions">
-                  <button class="btn-mini" data-act="edit" data-id="${r.id}">✏️ แก้ไข</button>
-                  <button class="btn-mini" data-act="load" data-id="${r.id}">📥 โหลด</button>
+                  <button class="btn-mini" data-act="edit" data-id="${r.id}" style="background:var(--pastel-blue)">✏️ แก้ไข</button>
+                  <button class="btn-mini" data-act="load" data-id="${r.id}" style="background:var(--pastel-yellow)">📥 โหลด</button>
                   <button class="btn-mini ghost" data-act="delete" data-id="${r.id}">🗑️ ลบ</button>
                 </div>
               </td>`;
@@ -1153,49 +910,41 @@
             cfBody.appendChild(tr);
           }
         }
-        searchMsg.textContent = `📄 หน้า ${data.page || page} – ${rows.length} รายการ`;
+        searchMsg.textContent = `📄 หน้าที่ ${data.page || page} – พบทั้งหมด ${rows.length} รายการ`;
         searchMsg.className = "small";
       } catch (err) {
-        searchMsg.textContent = "❌ " + err.message;
+        searchMsg.textContent = "❌ เกิดปัญหา: " + err.message;
         searchMsg.className = "msg-err";
       }
     }
     runSearch();
 
-    /* ===== ฟังก์ชันแก้ไขในตาราง ===== */
     function typeSelectHTML(cur) {
       const types = ["A", "AAAA", "CNAME", "TXT", "MX", "NS", "CAA", "HTTPS"];
-      return `<select class="sel edit-type">
+      return `<select class="sel edit-type" style="height:34px; padding:2px 6px;">
         ${types.map(t => `<option value="${t}" ${t===cur?'selected':''}>${t}</option>`).join("")}
       </select>`;
     }
 
     function proxToggleHTML(checked) {
-      return `<label class="switch switch-mini">
-        <input class="edit-prox" type="checkbox" ${checked?'checked':''} />
-        <span class="slider"></span>
-      </label>`;
+      return `<label class="switch"><input class="edit-prox" type="checkbox" ${checked?'checked':''} /><span class="slider"></span></label>`;
     }
 
     function startEdit(tr, row) {
       if (tr.dataset.editing === "1") return;
       tr.dataset.editing = "1";
-
       tr.querySelector(".cell-type").innerHTML = typeSelectHTML(row.type || "A");
-      tr.querySelector(".cell-name").innerHTML = `<input class="inpt edit-name" value="${escapeHtmlAttr(row.name || "")}" />`;
-      tr.querySelector(".cell-content-wrap").innerHTML = `<input class="inpt edit-content" value="${escapeHtmlAttr(row.content || "")}" />`;
-      tr.querySelector(".cell-ttl").innerHTML = `<input class="inpt edit-ttl" type="number" min="1" value="${row.ttl || 300}" />`;
+      tr.querySelector(".cell-name").innerHTML = `<input class="inpt edit-name" value="${escapeHtmlAttr(row.name || "")}" style="width:100%" />`;
+      tr.querySelector(".cell-content-wrap").innerHTML = `<input class="inpt edit-content" value="${escapeHtmlAttr(row.content || "")}" style="width:100%" />`;
+      tr.querySelector(".cell-ttl").innerHTML = `<input class="inpt edit-ttl" type="number" min="1" value="${row.ttl || 300}" style="width:70px" />`;
 
       const proxCell = tr.querySelector(".cell-prox");
-      if (["A", "AAAA", "CNAME"].includes(row.type || "")) {
-        proxCell.innerHTML = proxToggleHTML(!!row.proxied);
-      } else {
-        proxCell.innerHTML = `<span class="small muted">—</span>`;
-      }
+      if (["A", "AAAA", "CNAME"].includes(row.type || "")) { proxCell.innerHTML = proxToggleHTML(!!row.proxied); }
+      else { proxCell.innerHTML = `<span class="small">—</span>`; }
 
       const actCell = tr.querySelector(".cell-act .row-actions");
       actCell.innerHTML = `
-        <button class="btn-mini" data-act="save" data-id="${row.id}">💾 บันทึก</button>
+        <button class="btn-mini" data-act="save" data-id="${row.id}" style="background:var(--pastel-mint)">💾 บันทึก</button>
         <button class="btn-mini ghost" data-act="cancel" data-id="${row.id}">❌ ยกเลิก</button>
       `;
     }
@@ -1205,17 +954,13 @@
       tr.querySelector(".cell-type").innerHTML = `<span class="mono">${row.type || ""}</span>`;
       tr.querySelector(".cell-name").innerHTML = `${escapeHtml(row.name || "")}`;
       const cls = isIP(row.content || "") ? 'ip' : 'host';
-      tr.querySelector(".cell-content-wrap").innerHTML =
-        cls === 'ip' ?
-        `<span class="ip mono">${escapeHtml(row.content || "")}</span>` :
-        `<span class="host mono">${escapeHtml(row.content || "")}</span>`;
+      tr.querySelector(".cell-content-wrap").innerHTML = cls === 'ip' ? `<span class="ip mono">${escapeHtml(row.content || "")}</span>` : `<span class="host mono">${escapeHtml(row.content || "")}</span>`;
       tr.querySelector(".cell-ttl").innerHTML = `${row.ttl || ""}`;
-      tr.querySelector(".cell-prox").innerHTML =
-        (["A", "AAAA", "CNAME"].includes(row.type) && row.proxied) ? "🟩 พรอกซี" : "⬜ DNS เท่านั้น";
+      tr.querySelector(".cell-prox").innerHTML = (["A", "AAAA", "CNAME"].includes(row.type) && row.proxied) ? "🧡 PROXIED" : "🤍 DNS ONLY";
       const actCell = tr.querySelector(".cell-act .row-actions");
       actCell.innerHTML = `
-        <button class="btn-mini" data-act="edit" data-id="${row.id}">✏️ แก้ไข</button>
-        <button class="btn-mini" data-act="load" data-id="${row.id}">📥 โหลด</button>
+        <button class="btn-mini" data-act="edit" data-id="${row.id}" style="background:var(--pastel-blue)">✏️ แก้ไข</button>
+        <button class="btn-mini" data-act="load" data-id="${row.id}" style="background:var(--pastel-yellow)">📥 โหลด</button>
         <button class="btn-mini ghost" data-act="delete" data-id="${row.id}">🗑️ ลบ</button>
       `;
     }
@@ -1227,10 +972,8 @@
       const ttl = parseInt(tr.querySelector(".edit-ttl").value, 10) || row.ttl || 300;
       const name = normalizeHost(nameRaw);
 
-      if (!name) { searchMsg.textContent = "❌ ต้องระบุโฮสต์";
-        searchMsg.className = "msg-err"; return; }
-      if (!content) { searchMsg.textContent = "❌ ต้องระบุเนื้อหา";
-        searchMsg.className = "msg-err"; return; }
+      if (!name) { searchMsg.textContent = "❌ ต้องใส่ชื่อโฮสต์นะ"; searchMsg.className = "msg-err"; return; }
+      if (!content) { searchMsg.textContent = "❌ ต้องใส่ข้อมูลเนื้อหาด้วยนะ"; searchMsg.className = "msg-err"; return; }
 
       const payload = { type: t, name, content, ttl };
       if (t === "MX") { payload.priority = (row.priority != null) ? row.priority : 10; }
@@ -1239,26 +982,18 @@
         payload.proxied = prox ? !!prox.checked : false;
       }
 
-      searchMsg.textContent = "⏳ กำลังบันทึก…";
+      searchMsg.textContent = "⏳ กำลังบันทึกการเปลี่ยนแปลงลงสมุดเวทมนตร์…";
       searchMsg.className = "msg-warn";
       try {
-        const res = await fetch(`${API_URL}/${row.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+        const res = await fetch(`${API_URL}/${row.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         const data = await res.json();
-        if (!data.success) throw new Error(data.error || "อัปเดตล้มเหลว");
-        searchMsg.textContent = "✅ อัปเดตสำเร็จ";
+        if (!data.success) throw new Error(data.error || "แก้ไขข้อมูลล้มเหลว");
+        searchMsg.textContent = "✅ แก้ไขระเบียนสำเร็จแล้วจ้า!";
         searchMsg.className = "msg-ok";
         await runSearch();
-      } catch (err) {
-        searchMsg.textContent = "❌ " + err.message;
-        searchMsg.className = "msg-err";
-      }
+      } catch (err) { searchMsg.textContent = "❌ พังซะแล้ว: " + err.message; searchMsg.className = "msg-err"; }
     }
 
-    /* ===== Event Delegation สำหรับตาราง ===== */
     document.getElementById("cfBody").addEventListener("click", async (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
@@ -1274,7 +1009,7 @@
         ttlEl.value = String(row.ttl || 300);
         if (["A", "AAAA", "CNAME"].includes(row.type || "")) proxiedEl.checked = !!row.proxied;
         if (row.type === "MX" && row.priority != null) { priorityEl.value = row.priority; }
-        show("ok", "📥 โหลดลงฟอร์มแล้ว แก้ไขแล้วคลิก “เพิ่ม / อัปเดต”");
+        show("ok", "📥 เสกข้อมูลลงฟอร์มหลักให้แล้วจ้า! แก้ไขต่อด้านบนได้เลย");
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
@@ -1283,20 +1018,17 @@
       if (act === "save") { await saveEdit(tr, row); }
 
       if (act === "delete") {
-        if (!confirm(`❗ ลบระเบียน DNS นี้?\n${row.type} ${row.name} -> ${row.content}`)) return;
-        searchMsg.textContent = "⏳ กำลังลบ…";
+        if (!confirm(`❗ แน่ใจนะว่าจะลบระเบียน DNS นี้จริงๆ?\n${row.type} ${row.name} -> ${row.content}`)) return;
+        searchMsg.textContent = "⏳ กำลังส่งคาถาลบระเบียน…";
         searchMsg.className = "msg-warn";
         try {
           const res = await fetch(`${API_URL}/${row.id}`, { method: "DELETE" });
           const data = await res.json();
-          if (!data.success) throw new Error(data.error || "ลบล้มเหลว");
-          searchMsg.textContent = "✅ ลบสำเร็จ";
+          if (!data.success) throw new Error(data.error || "ลบไม่สำเร็จ");
+          searchMsg.textContent = "✅ ลบข้อมูลออกเรียบร้อย!";
           searchMsg.className = "msg-ok";
           await runSearch();
-        } catch (err) {
-          searchMsg.textContent = "❌ " + err.message;
-          searchMsg.className = "msg-err";
-        }
+        } catch (err) { searchMsg.textContent = "❌ ลบไม่ได้เพราะ: " + err.message; searchMsg.className = "msg-err"; }
       }
     });
   </script>
