@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN ULTRA SECURE - Premium Cute Download Hub</title>
+    <!-- Google Fonts - ใช้ฟอนต์ Fredoka & Comfortaa แนวโค้งมนน่ารัก และ Padauk สำหรับภาษาพม่า -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Fredoka:wght@500;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-pastel: #f0f4ff;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            
+            /* สีการ์ตูนพาสเทลหวานๆ */
+            --color-pukang: #4ea8de;
+            --color-kham: #ff70a6;
+            --color-shan: #56ab2f;
+            
+            --card-pukang-bg: #ebf8ff;
+            --card-kham-bg: #fff5f5;
+            --card-shan-bg: #f0fff4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Padauk', sans-serif;
+            background-color: var(--bg-pastel);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1rem;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* เอฟเฟกต์ก้อนบอลพาสเทลลอยนุ่มๆ ด้านหลัง */
+        .cute-blur-1, .cute-blur-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .cute-blur-1 {
+            top: -10%; left: -10%;
+            width: 400px;
+            height: 400px;
+            background: #ffd6ff;
+            animation: floatingGlow 8s infinite alternate ease-in-out;
+        }
+        .cute-blur-2 {
+            bottom: -10%; right: -10%;
+            width: 450px;
+            height: 450px;
+            background: #b9fbc0;
+            animation: floatingGlow 8s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes floatingGlow {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { transform: translate(30px, 40px) scale(1.15) rotate(10deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            z-index: 2;
+        }
+
+        /* Header ดีไซน์การ์ตูนสุดปัง */
+        .header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+
+        .logo-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-icon {
+            width: 42px;
+            height: 42px;
+            fill: none;
+            stroke: #ff70a6;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 4px 6px rgba(255, 112, 166, 0.3));
+            animation: bounceIcon 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.05); }
+        }
+
+        .header h1 {
+            font-family: 'Comfortaa', 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff70a6, #ff9770, #4ea8de);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* รายการแอป */
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* การ์ดทรงขนมปังมนๆ สไตล์คิ้วท์ */
+        .app-card {
+            border-radius: 32px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #fff; /* ขอบขาวหนาๆ สไตล์สติกเกอร์การ์ตูน */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* เงาแบบ Pop Shadow หนาๆ มนๆ */
+        .card-pukang { background-color: var(--card-pukang-bg); box-shadow: 0 12px 0 rgba(78, 168, 222, 0.15); }
+        .card-pukang:hover { transform: translateY(-8px); box-shadow: 0 20px 0 rgba(78, 168, 222, 0.2); }
+        
+        .card-kham { background-color: var(--card-kham-bg); box-shadow: 0 12px 0 rgba(255, 112, 166, 0.15); }
+        .card-kham:hover { transform: translateY(-8px); box-shadow: 0 20px 0 rgba(255, 112, 166, 0.2); }
+
+        .card-shan { background-color: var(--card-shan-bg); box-shadow: 0 12px 0 rgba(86, 171, 47, 0.15); }
+        .card-shan:hover { transform: translateY(-8px); box-shadow: 0 20px 0 rgba(86, 171, 47, 0.2); }
+
+        /* ข้อมูลด้านใน */
+        .app-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* โลโก้แอปดึ๋งดั๋ง */
+        .app-icon {
+            width: 76px;
+            height: 76px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .app-card:hover .app-icon { transform: scale(1.1) rotate(4deg); }
+
+        .app-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .name-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .app-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ป้ายสถานะเยลลี่กลมมน */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #fff;
+        }
+        .badge-pukang { background: var(--color-pukang); }
+        .badge-kham { background: var(--color-kham); }
+        .badge-shan { background: var(--color-shan); }
+
+        .app-action {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ปุ่มดาวน์โหลดทรง 3D Pop ปลุกความสดใส */
+        .download-btn {
+            font-family: 'Fredoka', sans-serif;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s ease;
+            border: 2px solid #fff;
+        }
+
+        /* ดีไซน์ปุ่มกดจมลึกลงไป 3D */
+        .card-pukang .download-btn { background: var(--color-pukang); box-shadow: 0 6px 0 #3a8ebd; }
+        .card-pukang .download-btn:hover { transform: translateY(2px); box-shadow: 0 4px 0 #3a8ebd; }
+        
+        .card-kham .download-btn { background: var(--color-kham); box-shadow: 0 6px 0 #e05389; }
+        .card-kham .download-btn:hover { transform: translateY(2px); box-shadow: 0 4px 0 #e05389; }
+
+        .card-shan .download-btn { background: var(--color-shan); box-shadow: 0 6px 0 #438a22; }
+        .card-shan .download-btn:hover { transform: translateY(2px); box-shadow: 0 4px 0 #438a22; }
+
+        /* การปรับแต่งหน้าจอมือถือ */
+        @media (max-width: 640px) {
+            body { padding: 3rem 1rem; }
+            .header h1 { font-size: 2.1rem; }
+            .app-card {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+                padding: 2rem 1.5rem;
+                border-radius: 28px;
+            }
+            .app-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .name-wrapper {
+                justify-content: center;
+            }
+            .download-btn {
+                width: 100%;
+                padding: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- พื้นหลังพาสเทลนุ่มฟู -->
+    <div class="cute-blur-1"></div>
+    <div class="cute-blur-2"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-wrapper">
+                <svg class="main-icon" viewBox="0 0 24 24">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+                    <path d="M12 11V15"/>
+                    <path d="M12 7H12.01"/>
+                </svg>
+                <h1>VPN Ultra Secure</h1>
+            </div>
+            <p>အမြန်နှုန်းမြင့် VPN ဒေါင်းလုဒ်စင်တာ | SELECT YOUR HIGH-SPEED VPN</p>
+        </div>
+
+        <!-- App Download List -->
+        <div class="app-list">
+            
+            <!-- PUKANG VPN -->
+            <div class="app-card card-pukang">
+                <div class="app-info">
+                    <img src="https://pukangvpn.xyz/icon/pukangvpn.png" class="app-icon" alt="PUKANG VPN Logo">
+                    <div class="app-details">
+                        <div class="name-wrapper">
+                            <span class="app-name">PUKANG VPN</span>
+                            <span class="badge badge-pukang">Secure Connect</span>
+                        </div>
+                        <div class="app-action">PUKANG VPN ဒေါင်းလုဒ်လုပ်ပါ 📥</div>
+                    </div>
+                </div>
+                <a href="https://play.google.com/store/apps/details?id=com.pukangvpn.th" target="_blank" class="download-btn">
+                    Download Now
+                </a>
+            </div>
+
+            <!-- KHAM VPN -->
+            <div class="app-card card-kham">
+                <div class="app-info">
+                    <img src="https://pukangvpn.xyz/icon/khamvpn.png" class="app-icon" alt="KHAM VPN Logo">
+                    <div class="app-details">
+                        <div class="name-wrapper">
+                            <span class="app-name">KHAM VPN</span>
+                            <span class="badge badge-kham">Fast Link</span>
+                        </div>
+                        <div class="app-action">KHAM VPN ဒေါင်းလုဒ်လုပ်ပါ 📥</div>
+                    </div>
+                </div>
+                <a href="https://play.google.com/store/apps/details?id=com.khamvpn.net" target="_blank" class="download-btn">
+                    Download Now
+                </a>
+            </div>
+
+            <!-- SHAN VPN -->
+            <div class="app-card card-shan">
+                <div class="app-info">
+                    <img src="https://pukangvpn.xyz/icon/shanvpn.png" class="app-icon" alt="SHAN VPN Logo">
+                    <div class="app-details">
+                        <div class="name-wrapper">
+                            <span class="app-name">SHAN VPN</span>
+                            <span class="badge badge-shan">Ultra Stable</span>
+                        </div>
+                        <div class="app-action">SHAN VPN ဒေါင်းလုဒ်လုပ်ပါ 📥</div>
+                    </div>
+                </div>
+                <a href="https://play.google.com/store/apps/details?id=com.shanvpn.vpnth" target="_blank" class="download-btn">
+                    Download Now
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
