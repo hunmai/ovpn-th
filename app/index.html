@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VPN ULTRA SECURE - Premium Cute Download Hub</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VPN ULTRA SECURE - Premium Download Center">
+    <meta property="og:description" content="👉 ဒေါင်းလုဒ်စင်တာ - SELECT YOUR HIGH-SPEED VPN 📥">
+    <meta property="og:image" content="https://pukangvpn.xyz/icon/all-app-icon.jpg"> <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1200">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Fredoka:wght@500;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
@@ -31,7 +38,7 @@
         }
 
         html {
-            scroll-behavior: smooth; /* ช่วยให้การเลื่อนหน้าเว็บนุ่มนวลขึ้น */
+            scroll-behavior: smooth;
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
@@ -51,38 +58,19 @@
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
-            -webkit-overflow-scrolling: touch; /* เพิ่มความลื่นไหลในการไถหน้าจอบน iOS / Android */
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* เอฟเฟกต์ก้อนบอลพาสเทลลอยนุ่มๆ ด้านหลัง - ปรับให้ใช้ GPU เพื่อการ Scroll ที่ลื่นไหล */
-        .cute-blur-1, .cute-blur-2 {
+        /* ใช้ Radial Gradient เพื่อการสกรอลล์ที่ลื่นไหล */
+        body::before {
+            content: '';
             position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
+            inset: 0;
+            background: 
+                radial-gradient(circle at -10% -10%, #ffd6ff 0%, transparent 40%),
+                radial-gradient(circle at 110% 110%, #b9fbc0 0%, transparent 40%);
             z-index: 0;
             pointer-events: none;
-            max-width: 100vw;
-            will-change: transform; /* แจ้งให้เบราว์เซอร์เตรียมสลับไปใช้การประมวลผลบนการ์ดจอ */
-        }
-        .cute-blur-1 {
-            top: -5%; left: -5%;
-            width: 300px;
-            height: 300px;
-            background: #ffd6ff;
-            animation: floatingGlow 8s infinite alternate ease-in-out;
-        }
-        .cute-blur-2 {
-            bottom: -5%; right: -5%;
-            width: 320px;
-            height: 320px;
-            background: #b9fbc0;
-            animation: floatingGlow 8s infinite alternate-reverse ease-in-out;
-        }
-
-        @keyframes floatingGlow {
-            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-            100% { transform: translate3d(15px, 20px, 0) scale(1.1) rotate(5deg); }
         }
 
         .container {
@@ -91,7 +79,7 @@
             z-index: 2;
         }
 
-        /* Header ดีไซน์การ์ตูนสุดปัง */
+        /* Header ดีไซน์การ์ตูน */
         .header {
             text-align: center;
             margin-bottom: 3.5rem;
@@ -101,7 +89,7 @@
 
         .logo-wrapper {
             display: inline-flex;
-            flex-direction: column; /* ปรับให้โลโก้อยู่ด้านบนของชื่อเว็บบาลานซ์สวยๆ */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 16px;
@@ -109,7 +97,6 @@
             max-width: 100%;
         }
 
-        /* โลโก้ใหม่สไตล์สติกเกอร์การ์ตูน */
         .header-logo {
             width: 90px;
             height: 90px;
@@ -117,13 +104,13 @@
             object-fit: cover;
             border: 4px solid #fff;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            animation: bounceIcon 2.5s infinite ease-in-out;
+            animation: bounceIcon 3s infinite ease-in-out;
             will-change: transform;
         }
 
         @keyframes bounceIcon {
-            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-            50% { transform: translate3d(0, -8px, 0) scale(1.03); }
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -6px, 0); }
         }
 
         .header h1 {
@@ -161,22 +148,20 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
-            overflow: hidden;
             border: 3px solid #fff;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
             width: 100%;
             will-change: transform;
         }
 
-        /* เงาแบบ Pop Shadow หนาๆ มนๆ */
         .card-pukang { background-color: var(--card-pukang-bg); box-shadow: 0 12px 0 rgba(78, 168, 222, 0.15); }
-        .card-pukang:hover { transform: translate3d(0, -8px, 0); box-shadow: 0 20px 0 rgba(78, 168, 222, 0.2); }
+        .card-pukang:hover { transform: translate3d(0, -6px, 0); box-shadow: 0 18px 0 rgba(78, 168, 222, 0.2); }
         
         .card-kham { background-color: var(--card-kham-bg); box-shadow: 0 12px 0 rgba(255, 112, 166, 0.15); }
-        .card-kham:hover { transform: translate3d(0, -8px, 0); box-shadow: 0 20px 0 rgba(255, 112, 166, 0.2); }
+        .card-kham:hover { transform: translate3d(0, -6px, 0); box-shadow: 0 18px 0 rgba(255, 112, 166, 0.2); }
 
         .card-shan { background-color: var(--card-shan-bg); box-shadow: 0 12px 0 rgba(86, 171, 47, 0.15); }
-        .card-shan:hover { transform: translate3d(0, -8px, 0); box-shadow: 0 20px 0 rgba(86, 171, 47, 0.2); }
+        .card-shan:hover { transform: translate3d(0, -6px, 0); box-shadow: 0 18px 0 rgba(86, 171, 47, 0.2); }
 
         /* ข้อมูลด้านใน */
         .app-info {
@@ -186,7 +171,6 @@
             max-width: 100%;
         }
 
-        /* โลโก้แอปดึ๋งดั๋ง */
         .app-icon {
             width: 76px;
             height: 76px;
@@ -194,11 +178,11 @@
             object-fit: cover;
             border: 3px solid #fff;
             box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             flex-shrink: 0;
         }
 
-        .app-card:hover .app-icon { transform: scale(1.06) rotate(3deg); }
+        .app-card:hover .app-icon { transform: scale(1.05) rotate(2deg); }
 
         .app-details {
             display: flex;
@@ -221,7 +205,6 @@
             white-space: nowrap;
         }
 
-        /* ป้ายสถานะเยลลี่กลมมน */
         .badge {
             font-size: 0.75rem;
             font-weight: 700;
@@ -241,7 +224,6 @@
             word-wrap: break-word;
         }
 
-        /* ปุ่มดาวน์โหลดทรง 3D Pop ปลุกความสดใส */
         .download-btn {
             font-family: 'Fredoka', sans-serif;
             text-decoration: none;
@@ -253,12 +235,11 @@
             align-items: center;
             justify-content: center;
             color: white;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             border: 2px solid #fff;
             flex-shrink: 0;
         }
 
-        /* ดีไซน์ปุ่มกดจมลึกลงไป 3D */
         .card-pukang .download-btn { background: var(--color-pukang); box-shadow: 0 6px 0 #3a8ebd; }
         .card-pukang .download-btn:hover { transform: translate3d(0, 2px, 0); box-shadow: 0 4px 0 #3a8ebd; }
         
@@ -268,7 +249,6 @@
         .card-shan .download-btn { background: var(--color-shan); box-shadow: 0 6px 0 #438a22; }
         .card-shan .download-btn:hover { transform: translate3d(0, 2px, 0); box-shadow: 0 4px 0 #438a22; }
 
-        /* การปรับแต่งหน้าจอมือถือ (Responsive และห้ามเลื่อนซ้ายขวา) */
         @media (max-width: 640px) {
             body { padding: 2rem 0.75rem; }
             .header h1 { font-size: 1.8rem; }
@@ -296,9 +276,6 @@
     </style>
 </head>
 <body>
-
-    <div class="cute-blur-1"></div>
-    <div class="cute-blur-2"></div>
 
     <div class="container">
         <div class="header">
