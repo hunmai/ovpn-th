@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SHAN VPN Update File</title>
 
-    <!-- Google Fonts สำหรับฟอนต์แนวโมเดิร์นน่ารักๆ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- ====== 原有样式 (未修改) ====== -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -122,7 +120,6 @@
         }
     </style>
 
-    <!-- ====== ✨ การตกแต่งแบบฉบับการ์ตูน/อนิเมะสุดเท่ (Manga Pop Art Style) ====== -->
     <style>
         * {
             box-sizing: border-box;
@@ -283,7 +280,8 @@
         .btn-config:hover { background: #e6a600 !important; }
 
         #status {
-            margin-top: 15px !important;
+            margin-top: 0px !important;
+            margin-bottom: 20px !important; /* เพิ่มระยะห่างด้านล่างแทนเมื่อแสดงผลด้านบน */
             padding: 12px !important;
             border: 3px solid #000000 !important;
             border-radius: 10px !important;
@@ -305,7 +303,8 @@
         <h2>SHAN VPN Update</h2>
         <p class="subtitle">Manga Update Panel ⚡</p>
 
-        <!-- ====== ส่วนที่ 1: ตรวจสอบ Token ====== -->
+        <div id="status"></div>
+
         <div id="authSection" class="config-box">
             <div class="form-group">
                 <label for="githubToken">GitHub Personal Access Token</label>
@@ -314,7 +313,6 @@
             <button class="btn-auth" onclick="verifyAndLoadDashboard()">เข้าสู่ระบบจัดการไฟล์ ➔</button>
         </div>
 
-        <!-- ====== ส่วนที่ 2: หน้าจอ Dashboard แก้ไขเนื้อหาไฟล์ ====== -->
         <div id="mainDashboard" style="display: none;">
             <div class="config-box">
                 <div class="form-group">
@@ -332,11 +330,8 @@
                 <button class="btn-config" onclick="uploadSingleFile('config', 'configContent')">⚙️ Update config</button>
             </div>
         </div>
-
-        <div id="status"></div>
     </div>
 
-    <!-- ====== JavaScript การทำงานหลัก (คงเดิมไว้ทั้งหมดเพื่อความปลอดภัยของระบบ) ====== -->
     <script>
         const CONFIG = {
             repo: "hunmai/ovpn-th",
@@ -489,7 +484,6 @@
         }
     </script>
 
-    <!-- ====== Background Anime Effect ====== -->
     <script>
         (function() {
             'use strict';
