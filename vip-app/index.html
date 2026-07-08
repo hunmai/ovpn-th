@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Our Apps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Mitr', sans-serif;
+        }
+
+        body {
+            /* พื้นหลังสีเหลืองสไตล์คอมิกส์แถมลายจุดจางๆ */
+            background-color: #f7d070;
+            background-image: radial-gradient(#f3be32 15%, transparent 16%);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            transform: rotate(-1deg); /* เอียงนิดๆ เพิ่มความกวน */
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            /* ทำเส้นขอบตัวหนังสือสีดำหนาๆ */
+            -webkit-text-stroke: 3px #111111;
+            text-shadow: 5px 5px 0px #111111;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            background: #111111;
+            color: #ffffff;
+            display: inline-block;
+            padding: 5px 15px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            transform: rotate(1deg);
+        }
+
+        .app-container {
+            display: flex;
+            gap: 40px;
+            max-width: 1000px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* การ์ดแอปสไตล์ Neo-brutalism / Comic */
+        .app-card {
+            background: #ffffff;
+            border: 4px solid #111111; /* เส้นขอบดำหนา */
+            border-radius: 24px;
+            /* เงาแบบแข็ง สีดำสนิท ไม่ฟุ้ง */
+            box-shadow: 8px 8px 0px #111111; 
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* เอฟเฟกต์เวลาดึงดูดสายตาเมื่อเอาเมาส์มาวาง */
+        .app-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px #111111;
+        }
+
+        /* ตกแต่งการ์ดที่ 1 */
+        .app-card.card-blue { background-color: #f1f7ff; }
+        /* ตกแต่งการ์ดที่ 2 */
+        .app-card.card-green { background-color: #f2fff6; }
+
+        /* กรอบใส่โลโก้สไตล์การ์ตูน */
+        .app-icon-box {
+            width: 110px;
+            height: 110px;
+            border: 4px solid #111111;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            overflow: hidden; /* ให้รูปโลโก้ตัดตามความโค้งของกรอบ */
+            box-shadow: 4px 4px 0px #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+        }
+        
+        /* ปรับรูปภาพโลโก้ให้เต็มกรอบ */
+        .app-icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-card.card-blue .app-icon-box {
+            transform: rotate(-3deg); /* เอียงซ้ายนิดๆ */
+        }
+        
+        .app-card.card-green .app-icon-box {
+            transform: rotate(3deg); /* เอียงขวานิดๆ */
+        }
+
+        .app-title {
+            font-size: 2.1rem;
+            color: #111111;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-shadow: 1px 1px 0px #ffffff;
+        }
+
+        .app-version {
+            display: inline-block; /* เพิ่มตรงนี้เพื่อให้จัดระยะห่างได้ */
+            font-size: 0.9rem;
+            color: #111111;
+            background: #ffdf78;
+            padding: 4px 16px;
+            border-radius: 10px;
+            margin-bottom: 35px; /* เว้นระยะห่างลงมาหาปุ่มดาวน์โหลด */
+            border: 3px solid #111111;
+            font-weight: 600;
+            box-shadow: 2px 2px 0px #111111;
+        }
+
+        /* ปุ่มกดสไตล์การ์ตูนป๊อปๆ */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff5964; /* สีแดงส้มกระแทกตา */
+            color: white;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 16px;
+            border: 4px solid #111111;
+            font-weight: 600;
+            font-size: 1.3rem;
+            width: 100%;
+            transition: all 0.1s ease;
+            box-shadow: 0px 5px 0px #111111;
+            text-shadow: 2px 2px 0px #111111;
+        }
+
+        .btn-download:hover {
+            transform: translateY(2px);
+            box-shadow: 0px 3px 0px #111111;
+        }
+
+        .btn-download:active {
+            transform: translateY(5px);
+            box-shadow: 0px 0px 0px #111111;
+        }
+
+        /* เปลี่ยนสีปุ่มการ์ดที่ 2 ให้เด่นไปอีกแบบ */
+        .app-card.card-green .btn-download {
+            background: #35a7ff; /* สีน้ำเงินสว่าง */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 50px;
+            }
+            .app-card {
+                max-width: 100%;
+            }
+            .header h1 {
+                font-size: 2.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ดาวน์โหลดแอปสุดเจ๋ง!</h1>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="app-card card-blue">
+            <div class="app-icon-box">
+                <img src="https://pukangvpn.xyz/icon/netdeevip.png" alt="NET DEE VIP Logo">
+            </div>
+            <div class="app-title">NET DEE VIP</div>
+            <div><span class="app-version">OVPN & SSH VERSION</span></div>
+            <a href="https://drive.google.com/file/d/11nc5_IC64Zegrf2r6jmJnQG1C7Ekw89S/view?usp=drivesdk" target="_blank" class="btn-download">ดาวน์โหลดไฟล์</a>
+        </div>
+
+        <div class="app-card card-green">
+            <div class="app-icon-box">
+                <img src="https://pukangvpn.xyz/icon/taivpnvip.png" alt="TAI VPN VIP Logo">
+            </div>
+            <div class="app-title">TAI VPN VIP</div>
+            <div><span class="app-version">V2RAY VERSION</span></div>
+            <a href="https://drive.google.com/file/d/1z8AnF4mpgSnsrzcsJAssoe9zIpF7-yHm/view?usp=drivesdk" target="_blank" class="btn-download">ดาวน์โหลดไฟล์</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
