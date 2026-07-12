@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Our Community!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Kanit', 'Fredoka One', 'Comic Sans MS', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #fef6e4;
+            background-image: radial-gradient(#f3d2c1 15%, transparent 15%);
+            background-size: 30px 30px;
+            position: relative;
+            padding-bottom: 80px; /* เพิ่มพื้นที่ด้านล่างไม่ให้ปุ่มแอดมินบังการ์ด */
+        }
+
+        /* การ์ดหลัก */
+        .card {
+            background: #ffffff;
+            border: 4px solid #001858;
+            padding: 40px 30px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 8px 8px 0px #001858;
+            transition: all 0.3s ease;
+        }
+
+        h2 {
+            color: #001858;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 0px #f3d2c1;
+        }
+
+        p {
+            color: #172c66;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        /* ปุ่มหลักในหน้าการ์ด */
+        .btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 16px 25px;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: 20px;
+            border: 4px solid #001858;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+        }
+
+        .btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-facebook {
+            background-color: #3b5998;
+            box-shadow: 0 6px 0px #001858;
+        }
+
+        .btn-facebook:hover {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0px #001858;
+            background-color: #4c70ba;
+        }
+
+        .btn-telegram {
+            background-color: #33a8e2;
+            box-shadow: 0 6px 0px #001858;
+        }
+
+        .btn-telegram:hover {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0px #001858;
+            background-color: #55beee;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 0px rgba(0,24,88,0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .logo-img {
+            transform: scale(1.2) rotate(-10deg);
+        }
+
+        /* ----------------------------------------------- */
+        /* โค้ดปุ่มติดต่อแอดมินขนาดเล็ก ด้านล่างสุด-ตรงกลาง */
+        /* ----------------------------------------------- */
+        .btn-admin-floating {
+            position: fixed;
+            bottom: 20px; /* ระยะห่างจากขอบล่าง */
+            left: 50%;
+            transform: translateX(-50%); /* จัดให้อยู่ตรงกลางจอพอดี */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #ff6b6b; /* สีแดงพาสเทลการ์ตูน */
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: 30px;
+            border: 3px solid #001858;
+            box-shadow: 0 4px 0px #001858;
+            z-index: 999;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* เอฟเฟกต์ตอนเมาส์ชี้ปุ่มแอดมิน */
+        .btn-admin-floating:hover {
+            transform: translateX(-50%) translateY(-3px); /* ลอยเด่นขึ้นมานิดนึง */
+            box-shadow: 0 7px 0px #001858;
+            background-color: #ff8787;
+        }
+
+        /* ปุ่มแอดมินตอนโดนกด */
+        .btn-admin-floating:active {
+            transform: translateX(-50%) translateY(2px);
+            box-shadow: 0 2px 0px #001858;
+        }
+
+        .admin-icon-img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        /* โลโก้แอดมินหมุนดุ๊กดิ๊กเวลาชี้ */
+        .btn-admin-floating:hover .admin-icon-img {
+            transform: rotate(360deg) scale(1.2);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="card">
+        <h2>ဟေ့ သူငယ်ချင်း!</h2>
+<p>ငါတို့အဖွဲ့နဲ့ လာပူးပေါင်းပါ! 🎉</p>
+        
+        <a href="https://www.facebook.com/share/19MdYY6EL5/" target="_blank" class="btn btn-facebook">
+            <img src="https://pukangvpn.xyz/icon/facebook.png" alt="Facebook" class="logo-img">
+            FACEBOOK PAGE
+        </a>
+
+        <a href="https://t.me/+bpBMYzDncGoxOTI1" target="_blank" class="btn btn-telegram">
+            <img src="https://pukangvpn.xyz/icon/telegram-icon.png" alt="Telegram" class="logo-img">
+            TELEGRAM GROUP
+        </a>
+    </div>
+
+    <a href="https://t.me/taivpnvip" target="_blank" class="btn btn-admin-floating">
+        <img src="https://pukangvpn.xyz/icon/admin.png" alt="Contact Admin" class="admin-icon-img">
+        အက်မင်းဆက်သွယ်ရန်
+    </a>
+
+</body>
+</html>
