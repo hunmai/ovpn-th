@@ -1,15 +1,30 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Our Community!</title>
+    <!-- ดึงฟอนต์สำรองสำหรับภาษาไทย/อังกฤษไว้ -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;900&display=swap" rel="stylesheet">
+    
     <style>
+        /* ----------------------------------------------- */
+        /* การตั้งค่าดึงฟอนต์ AJKunheingETM01-Regular */
+        /* ----------------------------------------------- */
+        @font-face {
+            font-family: 'AJKunheingETM01-Regular';
+            src: url('https://pukangvpn.xyz/font/AJKunheingETM01-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Kanit', 'Fredoka One', 'Comic Sans MS', sans-serif;
+            /* เรียกใช้งานฟอนต์ AJKunheingETM01-Regular เป็นหลัก */
+            font-family: 'AJKunheingETM01-Regular', 'Kanit', sans-serif;
         }
 
         body {
@@ -21,7 +36,38 @@
             background-image: radial-gradient(#f3d2c1 15%, transparent 15%);
             background-size: 30px 30px;
             position: relative;
-            padding-bottom: 80px; /* เพิ่มพื้นที่ด้านล่างไม่ให้ปุ่มแอดมินบังการ์ด */
+            padding-top: 60px;
+            padding-bottom: 80px;
+        }
+
+        /* แถบข้อความวิ่งด้านบนสุด */
+        .announcement-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ff6b6b;
+            border-bottom: 4px solid #001858;
+            padding: 10px 0;
+            z-index: 1000;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.4;
+            text-shadow: 2px 2px 0px #001858;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
         }
 
         /* การ์ดหลัก */
@@ -39,17 +85,17 @@
 
         h2 {
             color: #001858;
-            font-size: 32px;
-            font-weight: 900;
+            font-size: 34px;
             margin-bottom: 8px;
             text-shadow: 2px 2px 0px #f3d2c1;
+            line-height: 1.5;
         }
 
         p {
             color: #172c66;
-            font-size: 15px;
-            font-weight: bold;
+            font-size: 18px;
             margin-bottom: 35px;
+            line-height: 1.5;
         }
 
         /* ปุ่มหลักในหน้าการ์ด */
@@ -59,11 +105,10 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            padding: 16px 25px;
+            padding: 14px 25px;
             margin-bottom: 25px;
             color: #ffffff;
             font-size: 18px;
-            font-weight: 800;
             text-decoration: none;
             border-radius: 20px;
             border: 4px solid #001858;
@@ -108,22 +153,19 @@
             transform: scale(1.2) rotate(-10deg);
         }
 
-        /* ----------------------------------------------- */
-        /* โค้ดปุ่มติดต่อแอดมินขนาดเล็ก ด้านล่างสุด-ตรงกลาง */
-        /* ----------------------------------------------- */
+        /* ปุ่มติดต่อแอดมินขนาดเล็ก ด้านล่างสุด */
         .btn-admin-floating {
             position: fixed;
-            bottom: 20px; /* ระยะห่างจากขอบล่าง */
+            bottom: 20px;
             left: 50%;
-            transform: translateX(-50%); /* จัดให้อยู่ตรงกลางจอพอดี */
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background-color: #ff6b6b; /* สีแดงพาสเทลการ์ตูน */
+            padding: 8px 18px;
+            background-color: #ff6b6b;
             color: #ffffff;
-            font-size: 14px;
-            font-weight: 800;
+            font-size: 15px;
             text-decoration: none;
             border-radius: 30px;
             border: 3px solid #001858;
@@ -131,16 +173,15 @@
             z-index: 999;
             white-space: nowrap;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1.4;
         }
 
-        /* เอฟเฟกต์ตอนเมาส์ชี้ปุ่มแอดมิน */
         .btn-admin-floating:hover {
-            transform: translateX(-50%) translateY(-3px); /* ลอยเด่นขึ้นมานิดนึง */
+            transform: translateX(-50%) translateY(-3px);
             box-shadow: 0 7px 0px #001858;
             background-color: #ff8787;
         }
 
-        /* ปุ่มแอดมินตอนโดนกด */
         .btn-admin-floating:active {
             transform: translateX(-50%) translateY(2px);
             box-shadow: 0 2px 0px #001858;
@@ -153,18 +194,24 @@
             transition: transform 0.4s ease;
         }
 
-        /* โลโก้แอดมินหมุนดุ๊กดิ๊กเวลาชี้ */
         .btn-admin-floating:hover .admin-icon-img {
             transform: rotate(360deg) scale(1.2);
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- แถบข้อความวิ่งด้านบนสุด -->
+    <div class="announcement-bar">
+        <div class="marquee-text">
+            📢 PUKANG VPN Page နဲ့ SHAN VPN Page က ကျသွားပါလို့ပါ ကျတော် Kham Vpn Team Page အသစ်ဖွင့်ထားပါတယ် ကျေးဇူးပြုပြီး ကျွန်တော့်ကို follow လုပ်ခြင်းဖြင့် ကူညီပေးပါ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 📢 PUKANG VPN Page နဲ့ SHAN VPN Page က ကျသွားပါလို့ပါ ကျတော် Kham Vpn Team Page အသစ်ဖွင့်ထားပါတယ် ကျေးဇူးပြုပြီး ကျွန်တော့်ကို follow လုပ်ခြင်းဖြင့် ကူညီပေးပါ
+        </div>
+    </div>
+
+    <!-- การ์ดหลัก -->
     <div class="card">
         <h2>ဟေ့ သူငယ်ချင်း!</h2>
-<p>ငါတို့အဖွဲ့နဲ့ လာပူးပေါင်းပါ! 🎉</p>
+        <p>ငါတို့အဖွဲ့နဲ့ လာပူးပေါင်းပါ! 🎉</p>
         
         <a href="https://www.facebook.com/share/19MdYY6EL5/" target="_blank" class="btn btn-facebook">
             <img src="https://pukangvpn.xyz/icon/facebook.png" alt="Facebook" class="logo-img">
@@ -177,6 +224,7 @@
         </a>
     </div>
 
+    <!-- ปุ่มแอดมินด้านล่างสุด -->
     <a href="https://t.me/taivpnvip" target="_blank" class="btn btn-admin-floating">
         <img src="https://pukangvpn.xyz/icon/admin.png" alt="Contact Admin" class="admin-icon-img">
         အက်မင်းဆက်သွယ်ရန်
