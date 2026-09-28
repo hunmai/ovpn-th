@@ -1,33 +1,11 @@
 <?php
 // --- Proxy function ---
 function fetchOnlineCount($url) {
-    $allowed_domains = [
-        'nn01.pukangvpn.xyz',
-        'nn02.pukangvpn.xyz',
-        'nn03.pukangvpn.xyz',
-        'nn04.pukangvpn.xyz',
-        'nn05.pukangvpn.xyz',
-        'nn06.pukangvpn.xyz',
-        'nn07.pukangvpn.xyz',
-        'nn08.pukangvpn.xyz', 
-        'nn09.pukangvpn.xyz',
-        'nn10.pukangvpn.xyz', 
-        'nn11.pukangvpn.xyz', 
-        'nn12.pukangvpn.xyz',
-        'nn13.pukangvpn.xyz', 
-        'nn14.pukangvpn.xyz',
-        'nn15.pukangvpn.xyz',
-        'nn16.pukangvpn.xyz',
-        'nn17.pukangvpn.xyz',
-        'nn18.pukangvpn.xyz',
-        'nn19.pukangvpn.xyz',
-        'nn20.pukangvpn.xyz',
-        'nn21.pukangvpn.xyz',
-        'nn22.pukangvpn.xyz',
-        'nn23.pukangvpn.xyz',
-        'nn24.pukangvpn.xyz',
-        'nn25.pukangvpn.xyz'
-    ];
+    $allowed_domains = [];
+    for ($i = 1; $i <= 35; $i++) {
+        $allowed_domains[] = sprintf('nn%02d.pukangvpn.xyz', $i);
+    }
+    
     $domain = parse_url($url, PHP_URL_HOST);
     if (in_array($domain, $allowed_domains)) {
         $context = stream_context_create(['http' => ['timeout' => 5, 'ignore_errors' => true]]);
@@ -39,37 +17,16 @@ function fetchOnlineCount($url) {
     return false;
 }
 
-$servers = [
-    
-    ' THAILAND-01' => ['http://nn01.pukangvpn.xyz:82/server/online', 'http://nn01.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-02' => ['http://nn02.pukangvpn.xyz:82/server/online', 'http://nn02.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-03' => ['http://nn03.pukangvpn.xyz:82/server/online', 'http://nn03.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-04' => ['http://nn04.pukangvpn.xyz:82/server/online', 'http://nn04.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-05' => ['http://nn05.pukangvpn.xyz:82/server/online', 'http://nn05.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-06' => ['http://nn06.pukangvpn.xyz:82/server/online', 'http://nn06.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-07' => ['http://nn07.pukangvpn.xyz:82/server/online', 'http://nn07.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-08' => ['http://nn08.pukangvpn.xyz:82/server/online', 'http://nn08.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-09' => ['http://nn09.pukangvpn.xyz:82/server/online', 'http://nn09.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-10' => ['http://nn10.pukangvpn.xyz:82/server/online', 'http://nn10.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-11' => ['http://nn11.pukangvpn.xyz:82/server/online', 'http://nn11.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-12' => ['http://nn12.pukangvpn.xyz:82/server/online', 'http://nn12.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-13' => ['http://nn13.pukangvpn.xyz:82/server/online', 'http://nn13.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-14' => ['http://nn14.pukangvpn.xyz:82/server/online', 'http://nn14.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-15' => ['http://nn15.pukangvpn.xyz:82/server/online', 'http://nn15.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-16' => ['http://nn16.pukangvpn.xyz:82/server/online', 'http://nn16.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-17' => ['http://nn17.pukangvpn.xyz:82/server/online', 'http://nn17.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-18' => ['http://nn18.pukangvpn.xyz:82/server/online', 'http://nn18.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-19' => ['http://nn19.pukangvpn.xyz:82/server/online', 'http://nn19.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-20' => ['http://nn20.pukangvpn.xyz:82/server/online', 'http://nn20.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-21' => ['http://nn21.pukangvpn.xyz:82/server/online', 'http://nn21.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-22' => ['http://nn22.pukangvpn.xyz:82/server/online', 'http://nn22.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-23' => ['http://nn23.pukangvpn.xyz:82/server/online', 'http://nn23.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-24' => ['http://nn24.pukangvpn.xyz:82/server/online', 'http://nn24.pukangvpn.xyz:82/udpserver/online'],
-    ' THAILAND-25' => ['http://nn25.pukangvpn.xyz:82/server/online', 'http://nn25.pukangvpn.xyz:82/udpserver/online'],
-];
+$servers = [];
+for ($i = 1; $i <= 35; $i++) {
+    $num = sprintf('%02d', $i);
+    $servers["🇹🇭 THAILAND-$num"] = [
+        "http://nn{$num}.pukangvpn.xyz:82/server/online", 
+        "http://nn{$num}.pukangvpn.xyz:82/udpserver/online"
+    ];
+}
 
 $maxCapacity = 250;
-
 $serverStatuses = [];
 $totalOnline = 0;
 
@@ -93,9 +50,9 @@ function getStatusClass($online) {
     return 'normal';
 }
 function getStatusText($online) {
-    if ($online > 200) return 'High Load';
-    if ($online > 150) return 'Busy';
-    return 'Normal';
+    if ($online > 200) return 'HIGH LOAD';
+    if ($online > 150) return 'BUSY';
+    return 'ONLINE';
 }
 function getDotClass($online) {
     if ($online > 200) return 'dot-red';
@@ -113,262 +70,303 @@ function getPercentage($online, $max) {
     if ($max <= 0) return 0;
     return min(100, round(($online / $max) * 100));
 }
-
-/*  progress bar  */
 function getBarColorClass($percent) {
-    if ($percent >= 95) return 'bar-red';      // 95-100%  
-    if ($percent >= 50) return 'bar-yellow';   // 50-94%  
-    return 'bar-green';                        // 1-49%  
+    if ($percent >= 95) return 'bar-red';
+    if ($percent >= 50) return 'bar-yellow';
+    return 'bar-green';
 }
 
 header("Content-Security-Policy: frame-ancestors *;");
 ?>
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Status Online User</title>
+    <title>Cyber Node // Server Status</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-light: #f4f7fb;
-            --surface-light: #ffffff;
-            --text-primary-light: #1e293b;
-            --text-secondary-light: #64748b;
-            --border-light: #e2e8f0;
-            --card-shadow-light: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
-            --nav-bg-light: rgba(255,255,255,0.8);
-            --bg-dark: #0b1120;
-            --surface-dark: #1e293b;
-            --text-primary-dark: #f1f5f9;
-            --text-secondary-dark: #94a3b8;
-            --border-dark: #334155;
-            --card-shadow-dark: 0 20px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.3);
-            --nav-bg-dark: rgba(15, 23, 42, 0.8);
+            --bg: #030712;
+            --surface: rgba(17, 24, 39, 0.7);
+            --surface-solid: #111827;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --primary: #3b82f6;
             --green: #10b981;
             --yellow: #f59e0b;
             --red: #ef4444;
-            --grey: #94a3b8;
-            --bar-bg: #e2e8f0;
-            --space-xs: 0.5rem;
-            --space-sm: 0.75rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --bg: var(--bg-light);
-            --surface: var(--surface-light);
-            --text-primary: var(--text-primary-light);
-            --text-secondary: var(--text-secondary-light);
-            --border: var(--border-light);
-            --card-shadow: var(--card-shadow-light);
-            --nav-bg: var(--nav-bg-light);
+            --glow-green: rgba(16, 185, 129, 0.4);
+            --glow-red: rgba(239, 68, 68, 0.4);
         }
-        body.dark-mode {
-            --bg: var(--bg-dark);
-            --surface: var(--surface-dark);
-            --text-primary: var(--text-primary-dark);
-            --text-secondary: var(--text-secondary-dark);
-            --border: var(--border-dark);
-            --card-shadow: var(--card-shadow-dark);
-            --nav-bg: var(--nav-bg-dark);
-            --bar-bg: #334155;
+
+        .light {
+            --bg: #f8fafc;
+            --surface: rgba(255, 255, 255, 0.85);
+            --surface-solid: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
+            background-color: var(--bg);
+            color: var(--text-main);
             min-height: 100vh;
-            transition: background 0.3s, color 0.2s;
-            line-height: 1.5;
-            padding: 0 0 var(--space-lg) 0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            transition: background 0.3s ease, color 0.3s ease;
+            padding-bottom: 3rem;
         }
+
         .navbar {
             position: sticky;
             top: 0;
-            backdrop-filter: blur(12px);
-            background: var(--nav-bg) !important;
+            backdrop-filter: blur(16px);
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 0.75rem 1.5rem;
-            z-index: 10;
+            padding: 1rem 2rem;
+            z-index: 100;
         }
-        .navbar .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            max-width: 1280px;
+
+        .nav-container {
+            max-width: 1300px;
             margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .navbar-brand {
+
+        .brand {
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--text-primary);
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
             text-decoration: none;
         }
-        .navbar-brand img {
-            width: 36px;
-            height: auto;
-        }
-        .main {
-            max-width: 1280px;
-            margin: var(--space-xl) auto 0;
-            padding: 0 var(--space-lg);
-        }
-        .status-header {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: var(--space-xl);
-        }
-        .total-card {
-            background: var(--surface);
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: 100px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
+
+        .brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(59,130,246,0.5)); }
+
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
-            font-weight: 600;
-            font-size: 1.2rem;
+            gap: 1rem;
         }
-        .total-card .status-dot { width: 14px; height: 14px; }
+
+        .theme-toggle {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--primary); transform: scale(1.05); }
+
+        .main-container {
+            max-width: 1300px;
+            margin: 2rem auto 0;
+            padding: 0 1.5rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-title p { color: var(--text-muted); font-size: 0.9rem; }
+
+        .total-badge {
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.25rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+
         .server-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: var(--space-lg);
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
         }
+
         .server-card {
             background: var(--surface);
-            border-radius: 24px;
-            padding: var(--space-lg);
-            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 20px;
+            padding: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: var(--space-md);
+            gap: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
+
         .server-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3);
         }
-        .card-header {
+
+        .card-top {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: var(--space-sm);
         }
+
         .server-name {
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
-        .server-name i { color: var(--text-secondary); }
+
         .status-badge {
-            margin-left: auto;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-        .status-badge.highload { color: #ef4444; }
-        .status-badge.busy { color: #f59e0b; }
-        .status-badge.normal { color: #10b981; }
-        .status-line {
-            display: flex;
-            align-items: baseline;
-            gap: var(--space-sm);
-            flex-wrap: wrap;
-        }
-        .online-count {
+            font-size: 0.7rem;
             font-weight: 700;
-            color: var(--text-primary);
-            background: var(--bg);
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-        .status-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        .status-badge.normal { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-badge.busy { background: rgba(245, 158, 11, 0.15); color: var(--yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-badge.highload { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .status-badge.offline { background: rgba(156, 163, 175, 0.15); color: var(--text-muted); border: 1px solid var(--border); }
+
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
         }
-        .dot-green { background: var(--green); }
-        .dot-yellow { background: var(--yellow); }
-        .dot-red { background: var(--red); }
-        .dot-grey { background: var(--grey); }
-        .percentage-container {
-            margin-top: 0.25rem;
+
+        .user-count {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .percentage-label {
+        .user-count span { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+
+        .progress-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .progress-info {
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            margin-bottom: 0.25rem;
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            font-weight: 500;
         }
-        .bar-bg {
-            background-color: var(--bar-bg);
-            border-radius: 12px;
-            height: 8px;
+
+        .progress-track {
+            background: var(--border);
+            height: 6px;
+            border-radius: 10px;
             overflow: hidden;
-            width: 100%;
         }
-        .bar-fill {
+
+        .progress-fill {
             height: 100%;
-            width: 0%;
-            border-radius: 12px;
-            transition: width 0.4s ease;
+            border-radius: 10px;
+            transition: width 0.6s ease;
         }
-        .bar-green { background-color: #10b981; }
-        .bar-yellow { background-color: #f59e0b; }
-        .bar-red { background-color: #ef4444; }
-        .offline-message {
-            color: var(--text-secondary);
-            font-style: italic;
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
+
+        .bar-green { background: var(--green); box-shadow: 0 0 10px var(--glow-green); }
+        .bar-yellow { background: var(--yellow); }
+        .bar-red { background: var(--red); box-shadow: 0 0 10px var(--glow-red); }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
         }
+        .dot-green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .dot-yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+        .dot-red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
         .footer-note {
             text-align: center;
-            margin-top: var(--space-xl);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            margin-top: 3rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
         }
-        @media (max-width: 640px) {
-            .navbar .container { flex-direction: column; align-items: stretch; gap: var(--space-sm); }
-            .status-header { justify-content: center; }
-            .total-card { align-self: stretch; justify-content: center; }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
         }
+        .pulse { animation: pulse 2s infinite; }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="https://pukangvpn.xyz/icon/server-online.png" alt="Status">
-                Server Online User
+        <div class="nav-container">
+            <a class="brand" href="#">
+                <img src="https://pukangvpn.xyz/icon/server-online.png" alt="Logo">
+                <span>CYBER<span style="color: var(--primary);">NODE</span></span>
             </a>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <div class="main">
-        <div class="status-header">
-            <div class="total-card">
-                <span class="status-dot <?= getTotalDotClass($totalOnline) ?>"></span>
-                <span class="online-count"><?= number_format($totalOnline) ?> total online</span>
+    <div class="main-container">
+        <div class="dashboard-header">
+            <div class="header-title">
+                <h1><i class="bi bi-shield-lock-fill" style="color: var(--primary);"></i> Server Status Network</h1>
+                <p>Real-time gateway monitoring and load balancing indicator</p>
+            </div>
+            <div class="total-card total-badge">
+                <span class="status-dot pulse <?= getTotalDotClass($totalOnline) ?>"></span>
+                <div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">TOTAL ACTIVE USERS</div>
+                    <div style="font-size: 1.15rem; font-weight: 700;"><?= number_format($totalOnline) ?> <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">Online</span></div>
+                </div>
             </div>
         </div>
 
@@ -381,41 +379,45 @@ header("Content-Security-Policy: frame-ancestors *;");
                         $barColor = getBarColorClass($percent);
                     ?>
                     <div class="server-card">
-                        <div class="card-header">
-                            <span class="server-name"><i class="bi bi-hdd-stack"></i> <?= htmlspecialchars($name) ?></span>
+                        <div class="card-top">
+                            <span class="server-name"><i class="bi bi-hdd-rack" style="color: var(--text-muted);"></i> <?= htmlspecialchars($name) ?></span>
                             <span class="status-badge <?= getStatusClass($online) ?>"><?= getStatusText($online) ?></span>
                         </div>
-                        <div class="status-line">
+                        <div class="metrics">
+                            <div class="user-count">
+                                <?= number_format($online) ?> <span>/ <?= $maxCapacity ?></span>
+                            </div>
                             <span class="status-dot <?= getDotClass($online) ?>"></span>
-                            <span class="online-count"><?= number_format($online) ?> / <?= $maxCapacity ?> users</span>
                         </div>
-                        <div class="percentage-container">
-                            <div class="percentage-label">
-                                <span>Utilization</span>
+                        <div class="progress-box">
+                            <div class="progress-info">
+                                <span>Load Capacity</span>
                                 <span><?= $percent ?>%</span>
                             </div>
-                            <div class="bar-bg">
-                                <div class="bar-fill <?= $barColor ?>" style="width: <?= $percent ?>%;"></div>
+                            <div class="progress-track">
+                                <div class="progress-fill <?= $barColor ?>" style="width: <?= $percent ?>%;"></div>
                             </div>
                         </div>
                     </div>
                 <?php else: ?>
-                    <div class="server-card">
-                        <div class="card-header">
-                            <span class="server-name"><i class="bi bi-hdd-stack"></i> <?= htmlspecialchars($name) ?></span>
-                            <span class="status-badge"></span>
+                    <div class="server-card" style="opacity: 0.6;">
+                        <div class="card-top">
+                            <span class="server-name"><i class="bi bi-hdd-rack" style="color: var(--text-muted);"></i> <?= htmlspecialchars($name) ?></span>
+                            <span class="status-badge offline">OFFLINE</span>
                         </div>
-                        <div class="offline-message">
-                            <span class="status-dot dot-red"></span>
-                            Unable to connect
-                        </div>
-                        <div class="percentage-container">
-                            <div class="percentage-label">
-                                <span>Utilization</span>
-                                <span>�</span>
+                        <div class="metrics">
+                            <div class="user-count" style="color: var(--text-muted);">
+                                0 <span>/ <?= $maxCapacity ?></span>
                             </div>
-                            <div class="bar-bg">
-                                <div class="bar-fill" style="width: 0%;"></div>
+                            <span class="status-dot dot-red"></span>
+                        </div>
+                        <div class="progress-box">
+                            <div class="progress-info">
+                                <span>Connection Failed</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: 0%;"></div>
                             </div>
                         </div>
                     </div>
@@ -424,23 +426,35 @@ header("Content-Security-Policy: frame-ancestors *;");
         </div>
 
         <div class="footer-note">
-            <i class="bi bi-arrow-repeat me-1"></i> Auto-refresh every 30 seconds � Max <?= $maxCapacity ?> users per server
+            <i class="bi bi-arrow-repeat pulse"></i> Auto-refreshing every 30 seconds &bull; Max <?= $maxCapacity ?> users per node
         </div>
     </div>
 
     <script>
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                icon.className = 'bi bi-sun-fill';
+                localStorage.setItem('theme', 'light');
             } else {
-                document.body.classList.remove('dark-mode');
+                html.classList.remove('light');
+                html.classList.add('dark');
+                icon.className = 'bi bi-moon-stars-fill';
+                localStorage.setItem('theme', 'dark');
             }
         }
-        function getThemeByTime() {
-            const hours = new Date().getHours();
-            return (hours >= 6 && hours < 18) ? 'light' : 'dark';
+
+        // โหลดธีมที่ผู้ใช้เคยเลือกไว้ หรือตั้งค่าเริ่มต้นเป็น Dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.className = savedTheme;
+        if(savedTheme === 'light') {
+            document.getElementById('themeIcon').className = 'bi bi-sun-fill';
         }
-        applyTheme(getThemeByTime());
+
+        // รีเฟรชหน้าเว็บทุกๆ 30 วินาที
         setTimeout(() => location.reload(), 30000);
     </script>
 </body>
