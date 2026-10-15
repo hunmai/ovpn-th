@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือติดตั้งสคริปต์ตรวจสอบแอป OpenVPN (check_gui.py)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'Fira Code', monospace; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-500">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <span class="font-medium text-sm">คัดลอกไปยังคลิปบอร์ดแล้ว!</span>
+    </div>
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white">OpenVPN App Verification Guide</h1>
+                    <p class="text-xs text-slate-400">คู่มือติดตั้งสคริปต์ Python ตรวจสอบ Package Name ของแอปพลิเคชัน</p>
+                </div>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-cyan-950 text-cyan-400 border border-cyan-800">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                Python 3 Script
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+        <!-- Intro -->
+        <div class="bg-gradient-to-r from-slate-900 to-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <h2 class="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-cyan-400"></i> ภาพรวมระบบ
+            </h2>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                หน้านี้รวบรวมขั้นตอนการติดตั้งสคริปต์ Python สำหรับตรวจสอบสิทธิ์การเชื่อมต่อ OpenVPN โดยจะอนุญาตเฉพาะแอปพลิเคชันที่มีแพ็กเกจตรงกับที่กำหนดไว้เท่านั้น คุณสามารถคลิกปุ่ม "คัดลอก" เพื่อนำคำสั่งไปใช้งานบน Server ได้ทันที
+            </p>
+        </div>
+
+        <!-- Step 1.1 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm">1.1</span>
+                <h3 class="text-base font-semibold text-white">สร้างโฟลเดอร์เก็บสคริปต์</h3>
+            </div>
+            <p class="text-sm text-slate-300">พิมพ์คำสั่งนี้เพื่อสร้างโฟลเดอร์สำหรับเก็บสคริปต์ตรวจสอบ:</p>
+            
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-cyan-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>mkdir -p /etc/openvpn/scripts</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 1.2 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm">1.2</span>
+                <h3 class="text-base font-semibold text-white">สร้างและเขียนโค้ดไฟล์สคริปต์</h3>
+            </div>
+            <p class="text-sm text-slate-300">พิมพ์คำสั่งเพื่อสร้างไฟล์ชื่อ <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-xs">check_gui.py</code> ด้วยโปรแกรม nano:</p>
+
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-cyan-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>nano /etc/openvpn/scripts/check_gui.py</code></pre>
+            </div>
+
+            <p class="text-sm text-slate-300 pt-1">เมื่อหน้าต่างว่างๆ เปิดขึ้นมา ให้คัดลอกโค้ดด้านล่างนี้ไปวางทั้งหมด:</p>
+
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอกโค้ด</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-slate-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono max-h-96 leading-relaxed"><code>#!/usr/bin/env python3
+import os
+import sys
+
+def main():
+    # ดึงข้อมูลการเชื่อมต่อที่ OpenVPN ส่งมาให้
+    common_name = os.environ.get('common_name', 'Unknown')
+    iv_plat = os.environ.get('IV_PLAT', 'Unknown')
+    iv_gui_ver = os.environ.get('IV_GUI_VER', 'Unknown') 
+    
+    print(f"[VPN-AUTH] User: {common_name} | Platform: {iv_plat} | Client Info: {iv_gui_ver}")
+
+    # รายชื่อ Package Name ของแอปทั้งหมดที่คุณอนุญาต (เพิ่ม 2 แอปใหม่เข้ามาแล้ว)
+    allowed_packages = [
+        "com.pukangvpn.th",
+        "com.khamvpn.net",
+        "com.shanvpn.vpnth",
+        "com.shanvpnpro.net"
+    ]
+    
+    # ตรวจสอบว่าในข้อมูลที่แอปส่งมา มีชื่อแพ็กเกจของเราอยู่หรือไม่
+    is_allowed = False
+    for pkg in allowed_packages:
+        if pkg in iv_gui_ver:
+            is_allowed = True
+            break
+    
+    # ถ้าไม่มีแพ็กเกจไหนตรงเลย (เช่น ไปเปิดจากแอปอื่น) -> ตัดการเชื่อมต่อทันที
+    if not is_allowed:
+        print(f"[REJECT] Unauthorized app detected: {iv_gui_ver}")
+        sys.exit(1) # ส่งค่า 1 เพื่อปฏิเสธการเชื่อมต่อ
+
+    # ถ้าถูกต้อง (มาจากแอปของเรา) -> อนุญาตให้เชื่อมต่อปกติ
+    print("[ALLOW] Connection accepted from official app.")
+    sys.exit(0) # ส่งค่า 0 เพื่อให้อนุญาต
+
+if __name__ == '__main__':
+    main()</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 1.3 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm">1.3</span>
+                <h3 class="text-base font-semibold text-white">ให้สิทธิ์ตัวไฟล์สคริปต์ให้สามารถรันได้</h3>
+            </div>
+            <p class="text-sm text-slate-300">พิมพ์คำสั่งนี้เพื่อให้ระบบยอมรับไฟล์สคริปต์:</p>
+            
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-cyan-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>chmod +x /etc/openvpn/scripts/check_gui.py</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 1.4 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm">1.4</span>
+                <h3 class="text-base font-semibold text-white">บอก OpenVPN Server ให้เรียกใช้สคริปต์นี้</h3>
+            </div>
+            <p class="text-sm text-slate-300">เปิดไฟล์ตั้งค่าหลักของเซิร์ฟเวอร์ขึ้นมาแก้ไข:</p>
+            
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-cyan-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>nano /etc/openvpn/server.conf</code></pre>
+            </div>
+
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-amber-200 text-xs sm:text-sm flex items-start gap-3">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5"></i>
+                <div>
+                    <span class="font-semibold">หมายเหตุ:</span> หากไฟล์เซิร์ฟเวอร์ของคุณเก็บไว้ที่อื่น เช่น <code class="bg-amber-950/60 px-1 py-0.5 rounded font-mono text-amber-300">/etc/openvpn/server/server.conf</code> ให้เปลี่ยนไปใช้พาธนั้นแทนครับ
+                </div>
+            </div>
+
+            <p class="text-sm text-slate-300 pt-1">เลื่อนลงไปที่บรรทัดล่างสุดของไฟล์ แล้วเพิ่ม 2 บรรทัดนี้ลงไป:</p>
+
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-emerald-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>client-connect /etc/openvpn/scripts/check_gui.py
+script-security 2</code></pre>
+            </div>
+        </section>
+
+        <!-- Step 1.5 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm">1.5</span>
+                <h3 class="text-base font-semibold text-white">รีสตาร์ท OpenVPN เพื่อเปิดใช้งานระบบ</h3>
+            </div>
+            <p class="text-sm text-slate-300">พิมพ์คำสั่งรีสตาร์ทเซอร์วิส OpenVPN (ชื่ออาจแตกต่างกันตามเซิร์ฟเวอร์ของคุณ เช่น <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-xs">openvpn@server</code>):</p>
+            
+            <div class="relative group">
+                <div class="absolute top-3 right-3 z-10">
+                    <button onclick="copyCode(this)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition border border-slate-700 shadow-sm">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอก</span>
+                    </button>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl text-cyan-300 text-xs sm:text-sm overflow-x-auto border border-slate-800/80 font-mono"><code>systemctl restart openvpn@server</code></pre>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 mt-16 py-8 text-center text-xs text-slate-500">
+        <p>OpenVPN Client Authentication Guide &bull; Designed with Tailwind CSS</p>
+    </footer>
+
+    <!-- Clipboard Script -->
+    <script>
+        function copyCode(button) {
+            const container = button.closest('.group');
+            const codeBlock = container.querySelector('code');
+            const textToCopy = codeBlock.innerText;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showFeedback(button);
+                }).catch(() => {
+                    fallbackCopy(textToCopy, button);
+                });
+            } else {
+                fallbackCopy(textToCopy, button);
+            }
+        }
+
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showFeedback(button);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showFeedback(button) {
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i><span class="text-emerald-400">คัดลอกแล้ว</span>';
+            button.classList.add('border-emerald-500/50', 'bg-slate-800/90');
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.remove('border-emerald-500/50', 'bg-slate-800/90');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
